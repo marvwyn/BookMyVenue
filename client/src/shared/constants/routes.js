@@ -7,6 +7,7 @@ export const ROUTES = {
   ADMIN: "/admin",
   VENUE_BOOKING: "/venues/book",
   VENUES: "/venues",
+  BOOKINGS: "/bookings",
   VENUE_DETAILS: "/venues/:id",
   VENUE_BOOKING:"/venues/:id/book"
 
