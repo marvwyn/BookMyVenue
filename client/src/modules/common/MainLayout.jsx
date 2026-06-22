@@ -158,23 +158,6 @@ const MainLayout = ({ children }) => {
         >
       
           <div className="px-5 py-4 flex flex-col gap-1">
-            {NAV_LINKS.map((l) => (
-              <span
-                key={l}
-                className="
-          text-gray-700
-          font-medium
-          py-2.5
-          cursor-pointer
-          border-b
-          border-gray-50
-          last:border-0
-        "
-              >
-                {l}
-              </span>
-            ))}
-
             <div className="flex flex-col gap-3 mt-3 pt-3 border-t border-gray-100">
               {!user ? (
                 <>
