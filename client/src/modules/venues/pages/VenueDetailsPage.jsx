@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchVenueByIdApi } from "../api/venue.api";
 import MainLayout from "../../common/MainLayout";
+import BackButton from "../../common/BackButton";
 
 const VenueDetailsPage = () => {
   const { id } = useParams();
@@ -32,7 +33,7 @@ const VenueDetailsPage = () => {
       </div>
     );
   }
-//   console.log(venue);
+  //   console.log(venue);
   if (!venue) {
     return (
       <div className="pt-[68px] min-h-screen flex flex-col items-center justify-center gap-3">
@@ -50,15 +51,7 @@ const VenueDetailsPage = () => {
     <MainLayout>
       <div className="pt-[68px] min-h-screen bg-white">
         <div className="max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-[6%] py-8">
-          {/* Back */}
-          <button
-            onClick={() => navigate(-1)}
-            className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-700 transition-colors mb-6"
-          >
-            
-            🡨 Back
-          </button>
-
+          <BackButton />
           <div className="grid lg:grid-cols-[1fr_360px] gap-10">
             {/* LEFT */}
             <div>

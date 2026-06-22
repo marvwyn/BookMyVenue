@@ -33,7 +33,7 @@ const MainLayout = ({ children }) => {
     return () => window.removeEventListener("resize", fn);
   }, []);
 
-  const NAV_LINKS = ["Venues", "How It Works", "For Owners", "Pricing"];
+
 
   return (
     <>
@@ -51,17 +51,7 @@ const MainLayout = ({ children }) => {
             <span>BookMyVenue</span>
           </div>
 
-          {/* Desktop links */}
-          <div className="hidden lg:flex gap-8">
-            {NAV_LINKS.map((l) => (
-              <span
-                key={l}
-                className="text-gray-500 text-[0.9rem] font-medium cursor-pointer transition-colors hover:text-gray-900"
-              >
-                {l}
-              </span>
-            ))}
-          </div>
+       
 
           {/* Desktop auth */}
           <div className="hidden lg:flex items-center gap-2.5">
@@ -166,6 +156,7 @@ const MainLayout = ({ children }) => {
           className={`lg:hidden overflow-hidden transition-all duration-300 ${menuOpen ? "max-h-[600px]" : "max-h-0"
             } bg-white border-t border-gray-100`}
         >
+      
           <div className="px-5 py-4 flex flex-col gap-1">
             {NAV_LINKS.map((l) => (
               <span
