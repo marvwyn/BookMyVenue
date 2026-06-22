@@ -4,11 +4,12 @@ import MainLayout from "../../common/MainLayout";
 import VenueCard from "../components/VenueCard";
 
 import { useVenues } from "../hooks/useVenues";
+import BackButton from "../../common/BackButton";
 
 const VenueListingPage = () => {
   const { venues, loading } = useVenues();
   const navigate = useNavigate();
-
+  const approvedVenues = venues.filter((venue) => venue?.status === "APPROVED");
   return (
     <MainLayout>
       <div
@@ -21,12 +22,8 @@ const VenueListingPage = () => {
                
             "
       >
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-700 transition-colors mb-6"
-        >
-          🡨 Back
-        </button>
+        <BackButton />
+
         {loading ? (
           <p>Loading venues...</p>
         ) : venues.length === 0 ? (
@@ -41,9 +38,26 @@ const VenueListingPage = () => {
                      gap-5
                   "
           >
-            {venues.map((venue) => (
-              <VenueCard key={venue.id} venue={venue} />
-            ))}
+            {approvedVenues.length > 0 ? (
+              approvedVenues.map((venue) => (
+                <VenueCard key={venue.id} venue={venue} />
+              ))
+            ) : (
+              <div className="col-span-full flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-gray-100">
+                <div className="w-20 h-20 rounded-full bg-red-50 flex items-center justify-center mb-4">
+                  <span className="text-4xl">🏛️</span>
+                </div>
+
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  No Venues Available
+                </h3>
+
+                <p className="text-gray-500 text-center max-w-md px-4">
+                  There are currently no approved venues available for booking.
+                  Please check back later.
+                </p>
+              </div>
+            )}
           </div>
         )}
       </div>

@@ -1,7 +1,8 @@
 import VenueListingPage from "./pages/VenueListingPage";
 import { ROUTES } from "../../shared/constants/routes";
 import VenueDetailsPage from "./pages/VenueDetailsPage";
-import BookVenuePage from "./pages/BookVenuePage";
+import BookVenuePage from "../bookings/components/BookVenuePage";
+
 
 export const venueRoutes = [
   {

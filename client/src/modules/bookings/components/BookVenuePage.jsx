@@ -3,9 +3,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import {
   createBookingApi,
   fetchVenueByIdApi,
-} from "../../venues/api/venue.api";
+} from "../api/bookings.api";
 import MainLayout from "../../common/MainLayout";
 import { ROUTES } from "../../../shared/constants/routes";
+import BackButton from "../../common/BackButton";
 
 const BookVenuePage = () => {
   const { id } = useParams();
@@ -100,7 +101,8 @@ const adjustGuests = (itm) =>
   return (
     <MainLayout>
       <div className="max-w-2xl mx-auto ">
-        <div className="mt-24 bg-white border my-4 border-[1.5px] border-gray-100 rounded-[20px] p-6 flex justify-between items center">
+        <BackButton/>
+        <div className=" bg-white border my-4 border-[1.5px] border-gray-100 rounded-[20px] p-6 flex justify-between items center">
           <p className="font-extrabold pt-2 text-lg  text-black">
             Make Your Booking Request
           </p>

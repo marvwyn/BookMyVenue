@@ -32,7 +32,7 @@ const MainLayout = ({ children }) => {
     return () => window.removeEventListener("resize", fn);
   }, []);
 
-  const NAV_LINKS = ["Venues", "How It Works", "For Owners", "Pricing"];
+
 
   const getInitials = (name) => {
     if (!name) return "?";
@@ -62,17 +62,7 @@ const MainLayout = ({ children }) => {
             <span>BookMyVenue</span>
           </div>
 
-          {/* Desktop links */}
-          <div className="hidden lg:flex gap-8">
-            {NAV_LINKS.map((l) => (
-              <span
-                key={l}
-                className="text-gray-500 text-[0.9rem] font-medium cursor-pointer transition-colors hover:text-gray-900"
-              >
-                {l}
-              </span>
-            ))}
-          </div>
+       
 
           {/* Desktop auth */}
           <div className="hidden lg:flex items-center gap-2.5">
@@ -165,89 +155,7 @@ const MainLayout = ({ children }) => {
             menuOpen ? "max-h-[600px]" : "max-h-0"
           } bg-white border-t border-gray-100`}
         >
-          <div className="px-5 py-4 flex flex-col gap-1">
-            {NAV_LINKS.map((l) => (
-              <span
-                key={l}
-                className="
-          text-gray-700
-          font-medium
-          py-2.5
-          cursor-pointer
-          border-b
-          border-gray-50
-          last:border-0
-        "
-              >
-                {l}
-              </span>
-            ))}
-
-            <div className="flex flex-col gap-3 mt-3 pt-3 border-t border-gray-100">
-              {!user ? (
-                <>
-                  <button
-                    onClick={() => {
-                      navigate("/login");
-                      setMenuOpen(false);
-                    }}
-                    className="btn-outline"
-                  >
-                    Log In
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      navigate("/signup");
-                      setMenuOpen(false);
-                    }}
-                    className="btn-primary"
-                  >
-                    Sign Up
-                  </button>
-                </>
-              ) : (
-                <>
-                  <span className="font-medium">Hi, {user.name}</span>
-
-                  {isUser && !isOwner && (
-                    <button
-                      onClick={() => {
-                        navigate("/become-partner");
-                        setMenuOpen(false);
-                      }}
-                      className="btn-outline"
-                    >
-                      Become a Partner
-                    </button>
-                  )}
-
-                  {isOwner && (
-                    <button
-                      onClick={() => {
-                        navigate("/venue/dashboard");
-                        setMenuOpen(false);
-                      }}
-                      className="btn-primary"
-                    >
-                      Owner Dashboard
-                    </button>
-                  )}
-
-                  <button
-                    onClick={() => {
-                      logout();
-                      navigate("/");
-                      setMenuOpen(false);
-                    }}
-                    className="btn-outline"
-                  >
-                    Logout
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
+      
         </div>
       </nav>
       <main>{children}</main>
