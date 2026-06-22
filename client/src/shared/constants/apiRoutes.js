@@ -7,7 +7,6 @@ export const API_ROUTES = {
 
   VENUES: {
     BASE: "/venues",
-    BOOKING:"/bookings"
   },
 
   USERS: {
