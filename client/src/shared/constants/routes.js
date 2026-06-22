@@ -8,6 +8,6 @@ export const ROUTES = {
   VENUE_BOOKING: "/venues/book",
   VENUES: "/venues",
   VENUE_DETAILS: "/venues/:id",
-  
-  
+  VENUE_BOOKING:"/venues/:id/book"
+
 };

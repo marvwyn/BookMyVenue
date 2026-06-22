@@ -50,3 +50,11 @@ export const createVenueApi = async (payload) => {
  
    return response.data;
  };
+
+
+export const createBookingApi = async(payload)=>{
+  const response = await  axiosInstance.post(API_ROUTES.VENUES.BOOKING, payload);
+  return response.data;
+}
+
+ 
