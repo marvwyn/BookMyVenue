@@ -4,7 +4,7 @@ import {
   createBookingApi,
   fetchVenueByIdApi,
 } from "../api/bookings.api";
-import MainLayout from "../../common/MainLayout";
+import MainLayout from "../../common/CustomerLayout";
 import { ROUTES } from "../../../shared/constants/routes";
 import BackButton from "../../common/BackButton";
 

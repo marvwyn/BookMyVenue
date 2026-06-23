@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import MainLayout from "../../common/MainLayout";
+import MainLayout from "../../common/CustomerLayout";
 
 const OwnerLayout = () => {
    return (
