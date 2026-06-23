@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import logo from "../../assets/bookmyvenue.webp";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../shared/context/AuthContext";
+import { useAuth } from "../../shared/context/CustomerAuthContext";
 
 const MainLayout = ({ children }) => {
   const { user, logout, setActiveRole } = useAuth();
   const navigate = useNavigate();
   const activeRole = user?.activeRole;
 
-  const isAdmin = activeRole === "ADMIN";
   const isOwner = activeRole === "OWNER";
   const isUser = activeRole === "USER";
 
@@ -125,33 +124,6 @@ const MainLayout = ({ children }) => {
                     </button>
                   </>
                 )}
-
-                {/* {isAdmin && (
-                  <>
-                    <button
-                      onClick={() => {
-                        setActiveRole("USER");
-                        navigate("/");
-                      }}
-                      className="btn-outline !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
-                    >
-                      Customer Dashboard
-                    </button>
-
-                    {hasOwnerRole && (
-                      <button
-                        onClick={() => {
-                          setActiveRole("OWNER");
-                          navigate("/owner");
-                        }}
-                        className="btn-outline !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
-                      >
-                        Owner Dashboard
-                      </button>
-                    )}
-                  </>
-                )} */}
-
                 <button
                   onClick={() => {
                     logout();
@@ -281,34 +253,6 @@ const MainLayout = ({ children }) => {
                       </button>
                     </>
                   )}
-
-                  {/* {isAdmin && (
-                    <>
-                      <button
-                        onClick={() => {
-                          setActiveRole("USER");
-                          navigate("/");
-                          setMenuOpen(false);
-                        }}
-                        className="btn-outline"
-                      >
-                        Customer Dashboard
-                      </button>
-
-                      {hasOwnerRole && (
-                        <button
-                          onClick={() => {
-                            setActiveRole("OWNER");
-                            navigate("/owner");
-                            setMenuOpen(false);
-                          }}
-                          className="btn-outline"
-                        >
-                          Owner Dashboard
-                        </button>
-                      )}
-                    </>
-                  )} */}
                   <button
                     onClick={() => {
                       logout();

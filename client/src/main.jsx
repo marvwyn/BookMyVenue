@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { AuthProvider } from './shared/context/AuthContext';
+import { AuthProvider } from './shared/context/CustomerAuthContext';
+import { AdminAuthProvider } from './shared/context/AdminAuthContext';
 
 import App from './app/app.jsx';
 import './index.css';
@@ -11,11 +12,15 @@ ReactDOM.createRoot(
 ).render(
    <React.StrictMode>
 
-      <AuthProvider>
+    <AuthProvider>
 
-         <App />
+      <AdminAuthProvider>
 
-      </AuthProvider>
+        <App />
 
-   </React.StrictMode>
+      </AdminAuthProvider>
+
+    </AuthProvider>
+
+  </React.StrictMode>
 );

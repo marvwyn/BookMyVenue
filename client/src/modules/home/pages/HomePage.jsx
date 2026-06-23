@@ -1,4 +1,4 @@
-import MainLayout from "../../common/MainLayout";
+import MainLayout from "../../common/CustomerLayout";
 
 import HeroSection from "../components/HeroSection";
 import StatsSection from "../components/StatsSection";

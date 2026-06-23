@@ -11,7 +11,7 @@ export const AuthProvider = ({
 }) => {
   const [user, setUser] = useState(() => {
     const storedUser =
-      localStorage.getItem("user");
+      localStorage.getItem("customerUser");
 
     return storedUser
       ? JSON.parse(storedUser)
@@ -23,12 +23,12 @@ export const AuthProvider = ({
     accessToken
   ) => {
     localStorage.setItem(
-      "user",
+      "customerUser",
       JSON.stringify(user)
     );
 
     localStorage.setItem(
-      "accessToken",
+      "customerToken",
       accessToken
     );
 
@@ -45,7 +45,7 @@ export const AuthProvider = ({
       };
 
       localStorage.setItem(
-        "user",
+        "customerUser",
         JSON.stringify(updatedUser)
       );
 
@@ -54,9 +54,9 @@ export const AuthProvider = ({
   };
 
   const logout = () => {
-    localStorage.removeItem("user");
+    localStorage.removeItem("customerUser");
     localStorage.removeItem(
-      "accessToken"
+      "customerToken"
     );
 
     setUser(null);
