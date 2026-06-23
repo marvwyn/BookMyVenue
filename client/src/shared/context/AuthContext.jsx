@@ -1,17 +1,27 @@
-import { createContext, useContext, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+} from "react";
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({
+  children,
+}) => {
   const [user, setUser] = useState(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser =
+      localStorage.getItem("user");
 
     return storedUser
       ? JSON.parse(storedUser)
       : null;
   });
 
-  const login = (user, accessToken) => {
+  const login = (
+    user,
+    accessToken
+  ) => {
     localStorage.setItem(
       "user",
       JSON.stringify(user)
@@ -25,9 +35,29 @@ export const AuthProvider = ({ children }) => {
     setUser(user);
   };
 
+  const setActiveRole = (role) => {
+    setUser((prevUser) => {
+      if (!prevUser) return null;
+
+      const updatedUser = {
+        ...prevUser,
+        activeRole: role,
+      };
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(updatedUser)
+      );
+
+      return updatedUser;
+    });
+  };
+
   const logout = () => {
     localStorage.removeItem("user");
-    localStorage.removeItem("accessToken");
+    localStorage.removeItem(
+      "accessToken"
+    );
 
     setUser(null);
   };
@@ -38,6 +68,7 @@ export const AuthProvider = ({ children }) => {
         user,
         login,
         logout,
+        setActiveRole,
       }}
     >
       {children}
@@ -45,4 +76,5 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () =>
+  useContext(AuthContext);

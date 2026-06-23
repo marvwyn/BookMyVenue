@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import logo from "../../assets/bookmyvenue.webp";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../shared/context/AuthContext";
 
 const MainLayout = ({ children }) => {
-  const { user, logout } = useAuth();
+  const { user, logout, setActiveRole } = useAuth();
   const navigate = useNavigate();
-  const isOwnerArea = location.pathname.startsWith("/owner");
+  const activeRole = user?.activeRole;
 
-  const isOwner = user?.roles?.includes("OWNER");
-  const isUser = user?.roles?.includes("USER");
+  const isAdmin = activeRole === "ADMIN";
+  const isOwner = activeRole === "OWNER";
+  const isUser = activeRole === "USER";
+
+  const hasOwnerRole = user?.roles?.includes("OWNER");
 
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -51,7 +54,7 @@ const MainLayout = ({ children }) => {
             <span>BookMyVenue</span>
           </div>
 
-       
+
 
           {/* Desktop auth */}
           <div className="hidden lg:flex items-center gap-2.5">
@@ -63,66 +66,96 @@ const MainLayout = ({ children }) => {
                 >
                   Log In
                 </button>
+
                 <button
-                  className="btn-primary !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
                   onClick={() => navigate("/signup")}
+                  className="btn-primary !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
                 >
                   Sign Up
                 </button>
               </>
             ) : (
               <>
-                <div className="flex items-center gap-2">
-                  <span className="font-medium text-gray-700">
-                    Hi, {user.name}
-                  </span>
-                </div>
-
-                {isUser && !isOwner && (
-                  <button
-                    onClick={() => {
-                      navigate("/become-partner");
-                      setMenuOpen(false);
-                    }}
-                    className="btn-outline !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
-                  >
-                    Become a Partner
-                  </button>
-                )}
+                <span className="font-medium text-gray-700">
+                  Hi, {user.name}
+                </span>
 
                 {isUser && (
-                  <button
-                    onClick={() => navigate("/account")}
-                    className="btn-outline !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
-                  >
-                    My Account
-                  </button>
+                  <>
+                    <button
+                      onClick={() => navigate("/account")}
+                      className="btn-outline !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
+                    >
+                      My Account
+                    </button>
+
+                    {!hasOwnerRole && (
+                      <button
+                        onClick={() => navigate("/become-partner")}
+                        className="btn-outline !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
+                      >
+                        Become a Partner
+                      </button>
+                    )}
+
+                    {hasOwnerRole && (
+                      <button
+                        onClick={() => {
+                          setActiveRole("OWNER");
+                          navigate("/owner");
+                        }}
+                        className="btn-primary !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
+                      >
+                        Switch to Owner
+                      </button>
+                    )}
+                  </>
                 )}
 
                 {isOwner && (
-                  <button
-                    onClick={() => {
-                      navigate(
-                        isOwnerArea
-                          ? "/"
-                          : "/owner"
-                      );
-
-                      setMenuOpen(false);
-                    }}
-                    className="btn-primary !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
-                  >
-                    {isOwnerArea
-                      ? "Customer Dashboard"
-                      : "Owner Dashboard"}
-                  </button>
+                  <>
+                    <button
+                      onClick={() => {
+                        setActiveRole("USER");
+                        navigate("/");
+                      }}
+                      className="btn-outline !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
+                    >
+                      Customer Dashboard
+                    </button>
+                  </>
                 )}
+
+                {/* {isAdmin && (
+                  <>
+                    <button
+                      onClick={() => {
+                        setActiveRole("USER");
+                        navigate("/");
+                      }}
+                      className="btn-outline !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
+                    >
+                      Customer Dashboard
+                    </button>
+
+                    {hasOwnerRole && (
+                      <button
+                        onClick={() => {
+                          setActiveRole("OWNER");
+                          navigate("/owner");
+                        }}
+                        className="btn-outline !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
+                      >
+                        Owner Dashboard
+                      </button>
+                    )}
+                  </>
+                )} */}
 
                 <button
                   onClick={() => {
                     logout();
                     navigate("/");
-                    setMenuOpen(false);
                   }}
                   className="btn-outline !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
                 >
@@ -131,7 +164,6 @@ const MainLayout = ({ children }) => {
               </>
             )}
           </div>
-
           {/* Mobile hamburger */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
@@ -156,7 +188,7 @@ const MainLayout = ({ children }) => {
           className={`lg:hidden overflow-hidden transition-all duration-300 ${menuOpen ? "max-h-[600px]" : "max-h-0"
             } bg-white border-t border-gray-100`}
         >
-      
+
           <div className="px-5 py-4 flex flex-col gap-1">
             <div className="flex flex-col gap-3 mt-3 pt-3 border-t border-gray-100">
               {!user ? (
@@ -185,48 +217,98 @@ const MainLayout = ({ children }) => {
                 <>
                   <span className="font-medium">Hi, {user.name}</span>
 
-                  {isUser && !isOwner && (
-                    <button
-                      onClick={() => {
-                        navigate("/become-partner");
-                        setMenuOpen(false);
-                      }}
-                      className="btn-outline"
-                    >
-                      Become a Partner
-                    </button>
-                  )}
-
                   {isUser && (
-                    <button
-                      onClick={() => {
-                        navigate("/account");
-                        setMenuOpen(false);
-                      }}
-                      className="btn-outline"
-                    >
-                      My Account
-                    </button>
+                    <>
+                      <button
+                        onClick={() => {
+                          navigate("/account");
+                          setActiveRole("USER");
+                          setMenuOpen(false);
+                        }}
+                        className="btn-outline"
+                      >
+                        My Account
+                      </button>
+
+                      {!hasOwnerRole && (
+                        <button
+                          onClick={() => {
+                            navigate("/become-partner");
+                            setMenuOpen(false);
+                          }}
+                          className="btn-outline"
+                        >
+                          Become a Partner
+                        </button>
+                      )}
+
+                      {hasOwnerRole && (
+                        <button
+                          onClick={() => {
+                            navigate("/owner");
+                            setActiveRole("OWNER");
+                            setMenuOpen(false);
+                          }}
+                          className="btn-primary"
+                        >
+                          Owner Dashboard
+                        </button>
+                      )}
+                    </>
                   )}
 
                   {isOwner && (
-                    <button
-                      onClick={() => {
-                        navigate(
-                          isOwnerArea
-                            ? "/"
-                            : "/owner"
-                        );
+                    <>
+                      <button
+                        onClick={() => {
+                          navigate("/");
+                          setMenuOpen(false);
+                        }}
+                        className="btn-outline"
+                      >
+                        Customer Dashboard
+                      </button>
 
-                        setMenuOpen(false);
-                      }}
-                      className="btn-primary"
-                    >
-                      {isOwnerArea
-                        ? "Customer Dashboard"
-                        : "Owner Dashboard"}
-                    </button>
+                      <button
+                        onClick={() => {
+                          navigate("/owner");
+                          setActiveRole("OWNER");
+                          setMenuOpen(false);
+                        }}
+                        className="btn-primary"
+                      >
+                        Owner Dashboard
+                      </button>
+                    </>
                   )}
+
+                  {/* {isAdmin && (
+                    <>
+                      <button
+                        onClick={() => {
+                          setActiveRole("USER");
+                          navigate("/");
+                          setMenuOpen(false);
+                        }}
+                        className="btn-outline"
+                      >
+                        Customer Dashboard
+                      </button>
+
+                      {hasOwnerRole && (
+                        <button
+                          onClick={() => {
+                            setActiveRole("OWNER");
+                            navigate("/owner");
+                            setMenuOpen(false);
+                          }}
+                          className="btn-outline"
+                        >
+                          Owner Dashboard
+                        </button>
+                      )}
+                    </>
+                  )} */}
                   <button
                     onClick={() => {
                       logout();
