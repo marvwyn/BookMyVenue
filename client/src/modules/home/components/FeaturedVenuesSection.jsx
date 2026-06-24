@@ -20,8 +20,18 @@ const FeaturedVenuesSection = () => {
       console.error(error);
     }
   };
-  const approvedVenues = venues.filter((venue) => venue?.status === "APPROVED");
-  console.log(approvedVenues)
+  const approvedVenues = venues.filter((venue) => {
+    return (
+      venue.status === "APPROVED" &&
+      venue.name &&
+      venue.description &&
+      venue.city &&
+      venue.address &&
+      venue.price &&
+      venue.images?.length > 0 &&
+      venue.type
+    );
+  });
 
   return (
     <section className="py-14 bg-gray-50 px-5 sm:px-8 lg:px-[6%]">

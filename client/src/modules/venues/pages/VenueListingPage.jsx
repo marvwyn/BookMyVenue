@@ -9,7 +9,18 @@ import BackButton from "../../common/BackButton";
 const VenueListingPage = () => {
   const { venues, loading } = useVenues();
   const navigate = useNavigate();
-  const approvedVenues = venues.filter((venue) => venue?.status === "APPROVED");
+  const approvedVenues = venues.filter((venue) => {
+    return (
+      venue.status === "APPROVED" &&
+      venue.name &&
+      venue.description &&
+      venue.city &&
+      venue.address &&
+      venue.price &&
+      venue.images?.length > 0 &&
+      venue.type
+    );
+  });
   return (
     <MainLayout>
       <div
