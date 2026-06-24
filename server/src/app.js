@@ -1,13 +1,15 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import authRoutes from './modules/auth/auth.routes.js';
+
 import venueRoutes from './modules/venues/venues.routes.js';
 import userRoutes from "./modules/users/users.routes.js";
 import bookingRoutes from "./modules/bookings/bookings.routes.js";
 import adminRoutes from "./modules/admin/admin.routes.js";
 
 import { errorHandler } from './shared/middlewares/error.middleware.js';
+import authRoutes from './modules/auth/auth.routes.js';
+
 
 const app = express();
 

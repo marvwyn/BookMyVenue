@@ -21,6 +21,7 @@ const FeaturedVenuesSection = () => {
     }
   };
   const approvedVenues = venues.filter((venue) => venue?.status === "APPROVED");
+  console.log(approvedVenues)
 
   return (
     <section className="py-14 bg-gray-50 px-5 sm:px-8 lg:px-[6%]">

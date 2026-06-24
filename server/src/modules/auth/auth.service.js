@@ -343,3 +343,51 @@ export const loginAdmin = async (
    };
 
 };
+
+
+
+export const becomeOwner = async (userId, venueData) => {
+
+  const existingOwnerRole = await prisma.userRole.findFirst({
+    where: { userId, role: 'OWNER' }
+  });
+
+  if (existingOwnerRole) {
+    throw new ApiError(STATUS_CODES.BAD_REQUEST, 'User is already an owner');
+  }
+
+  await prisma.$transaction(async (tx) => {
+    await tx.userRole.create({
+      data: { userId, role: 'OWNER' }
+    });
+
+    await tx.venue.create({
+      data: {
+        ownerId: userId,
+        name: venueData.name,
+        type: venueData.type,
+        city: venueData.city
+      }
+    });
+  });
+
+  const userWithRoles = await prisma.user.findUnique({
+    where: { id: userId },
+    include: { roles: true }
+  });
+
+  const accessToken = generateAccessToken({
+    userId: userWithRoles.id,
+    roles: userWithRoles.roles.map(r => r.role)
+  });
+
+  return {
+    accessToken,
+    user: {
+      id: userWithRoles.id,
+      name: userWithRoles.name,
+      email: userWithRoles.email,
+      roles: userWithRoles.roles.map(r => r.role)
+    }
+  };
+};

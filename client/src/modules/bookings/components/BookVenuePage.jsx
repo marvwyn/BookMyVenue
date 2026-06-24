@@ -230,7 +230,7 @@ const adjustGuests = (itm) =>
                     <span className="text-gray-500">Rate</span>
                     <span className="font-medium">
                       {venue?.price
-                        ? `${venue?.currency ?? "AED"} ${venue?.price} / day`
+                        ? `${venue?.currency ?? "INR"} ${venue?.price} / day`
                         : "—"}
                     </span>
                   </div>
@@ -250,7 +250,7 @@ const adjustGuests = (itm) =>
                   <div className="flex justify-between text-base font-extrabold pt-3 border-t border-gray-100">
                     <span>Total</span>
                     <span className="text-red-600">
-                      {venue?.currency ?? "AED"} {total.toLocaleString()}
+                      {venue?.currency ?? "INR"} {total.toLocaleString()}
                     </span>
                   </div>
                 )}

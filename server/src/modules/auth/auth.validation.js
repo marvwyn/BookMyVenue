@@ -1,63 +1,65 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-export const signupSchema = z.object({
+export const signupSchema = z
+  .object({
+    accountType: z.enum(["USER", "OWNER"]),
 
-   accountType: z.enum([
-      'USER',
-      'OWNER'
-   ]),
+    name: z.string().min(3),
 
-   name: z.string().min(3),
+    email: z.email(),
 
-   email: z.email(),
+    phone: z.string(),
 
-   phone: z.string(),
+    password: z.string().min(8),
 
-   password: z.string().min(8),
+    venue: z
+      .object({
+        name: z.string(),
 
-   venue: z.object({
+        type: z.enum([
+          "AUDITORIUM",
+          "BANQUET_HALL",
+          "CAFE",
+          "RESTAURANT",
+          "CONFERENCE_ROOM",
+          "STUDIO",
+          "OUTDOOR_SPACE",
+          "OTHER",
+        ]),
 
-      name: z.string(),
-
-      type: z.enum([
-         'AUDITORIUM',
-         'BANQUET_HALL',
-         'CAFE',
-         'RESTAURANT',
-         'CONFERENCE_ROOM',
-         'STUDIO',
-         'OUTDOOR_SPACE',
-         'OTHER'
-      ]),
-
-      city: z.string()
-
-   }).optional()
-
-}).superRefine((data, ctx) => {
-
-   if (
-      data.accountType === 'OWNER' &&
-      !data.venue
-   ) {
-
+        city: z.string(),
+      })
+      .optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.accountType === "OWNER" && !data.venue) {
       ctx.addIssue({
-         code: 'custom',
-         message:
-            'Venue details are required',
-         path: ['venue']
+        code: "custom",
+        message: "Venue details are required",
+        path: ["venue"],
       });
-   }
-});
+    }
+  });
 
 export const loginSchema = z.object({
+  email: z.string().email("Invalid email address"),
 
-   email: z
-      .string()
-      .email('Invalid email address'),
+  password: z.string().min(1, "Password is required"),
+});
 
-   password: z
-      .string()
-      .min(1, 'Password is required')
-
+export const venueSchema = z.object({
+  name: z.string().min(1, "Venue name is required"),
+  type: z.enum(
+    [
+      "AUDITORIUM",
+      "BANQUET_HALL",
+      "CAFE",
+      "RESTAURANT",
+      "CONFERENCE_ROOM",
+      "STUDIO",
+      "OUTDOOR_SPACE",
+      "OTHER",
+    ],
+  ),
+  city: z.string(),
 });
