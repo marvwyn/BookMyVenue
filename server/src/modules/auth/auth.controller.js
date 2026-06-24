@@ -1,4 +1,4 @@
-import { signupUser, loginUser, loginAdmin } from "./auth.service.js";
+import { signupUser, loginUser, loginAdmin, becomeOwner } from "./auth.service.js";
 import { STATUS_CODES } from "../../shared/constants/statusCodes.js";
 import { SUCCESS_MESSAGES } from "../../shared/constants/messages.js";
 import ApiResponse from "../../shared/utils/apiResponse.js";
@@ -58,4 +58,14 @@ export const adminLoginController = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+export const becomeOwnerController = async (req, res, next) => {
+   try {
+      const userId = req.user.userId; 
+      const result = await becomeOwner(userId, req.body);
+      res.status(STATUS_CODES.OK,SUCCESS_MESSAGES.ACCOUNT_CREATED).json(result);
+   } catch (err) {
+      next(err);
+   }
 };

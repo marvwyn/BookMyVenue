@@ -146,7 +146,7 @@ const VenueDetailsPage = () => {
                       value: venue.price
                         ? `Rs.${venue.price.toLocaleString("en-IN")}`
                         : "—",
-                      sub: "/ hr",
+                      sub: "/ day",
                     },
                   ].map(({ label, value, sub }) => (
                     <div
