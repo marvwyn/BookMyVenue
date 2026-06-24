@@ -5,7 +5,7 @@ import { signupApi } from '../services/auth.service';
 import { userSignupSchema } from '../validations/signup.validation';
 
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../shared/context/AuthContext';
+import { useAuth } from '../../../shared/context/CustomerAuthContext';
 
 import { ROUTES } from '../../../shared/constants/routes';
 

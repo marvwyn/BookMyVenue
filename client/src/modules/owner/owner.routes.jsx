@@ -6,10 +6,16 @@ import OwnerVenuesPage from "./pages/OwnerVenuesPage";
 import OwnerBookingsPage from "./pages/OwnerBookingsPage";
 import OwnerLayout from "./components/OwnerLayout";
 
+import OwnerProtectedRoute from "../../shared/guards/OwnerProtectedRoute";
+
 const ownerRoutes = [
    {
       path: ROUTES.OWNER,
-      element: <OwnerLayout />,
+      element: (
+         <OwnerProtectedRoute>
+            <OwnerLayout />
+         </OwnerProtectedRoute>
+      ),
       children: [
          {
             index: true,

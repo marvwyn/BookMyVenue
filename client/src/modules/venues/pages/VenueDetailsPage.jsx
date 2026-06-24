@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchVenueByIdApi } from "../api/venue.api";
-import MainLayout from "../../common/MainLayout";
+import MainLayout from "../../common/CustomerLayout";
 import BackButton from "../../common/BackButton";
 
 const VenueDetailsPage = () => {

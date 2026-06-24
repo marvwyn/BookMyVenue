@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import MainLayout from "../../common/MainLayout";
+import MainLayout from "../../common/CustomerLayout";
 
 import VenueCard from "../components/VenueCard";
 

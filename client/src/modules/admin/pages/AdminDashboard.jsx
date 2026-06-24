@@ -1,9 +1,8 @@
-import MainLayout from "../../common/MainLayout";
 import AdminVenuesPage from "./AdminVenuesPage";
 
 const AdminDashboard = () => {
    return (
-      <MainLayout>
+      <>
 
          <div className="max-w-7xl mx-auto px-5 py-10 mt-20">
 
@@ -15,7 +14,7 @@ const AdminDashboard = () => {
 
          </div>
 
-      </MainLayout>
+      </>
    );
 };
 

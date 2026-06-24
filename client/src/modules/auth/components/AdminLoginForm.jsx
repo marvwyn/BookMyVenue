@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { loginSchema } from "../validations/login.validation";
 
-import { useAuth } from "../../../shared/context/AuthContext";
+import { useAdminAuth } from "../../../shared/context/AdminAuthContext";
 import { adminLoginApi } from "./../services/auth.service";
 import { ROUTES } from "../../../shared/constants/routes";
 
@@ -23,7 +23,7 @@ const inputClass = `
 
 const AdminLoginForm = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { loginAdmin } = useAdminAuth();
 
   const {
     register,
@@ -42,7 +42,7 @@ const AdminLoginForm = () => {
 
       console.log(response);
 
-      login(response.data.user, response.data.accessToken);
+      loginAdmin(response.data.user, response.data.accessToken);
 
       alert(response.message);
 

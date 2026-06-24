@@ -192,8 +192,8 @@ export const signupUser = async (userData) => {
 
             role => role.role
 
-         )
-
+         ),
+         activeRole: "USER"
       }
 
    };
@@ -259,7 +259,8 @@ export const loginUser = async (
             id: user.id,
             name: user.name,
             email: user.email,
-            roles
+            roles,
+            activeRole:"USER"
          }
       };
 
@@ -321,11 +322,8 @@ export const loginAdmin = async (
 
    const accessToken =
       generateAccessToken({
-
          userId: user.id,
-
          roles
-
       });
 
    return {
@@ -337,7 +335,8 @@ export const loginAdmin = async (
          id: user.id,
          name: user.name,
          email: user.email,
-         roles
+         roles,
+         activeRole:"ADMIN"
 
       }
 
