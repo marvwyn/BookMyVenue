@@ -3,12 +3,16 @@ import { NavLink } from "react-router-dom";
 
 import { fetchMyVenuesApi } from "../../venues/api/venue.api";
 import { fetchOwnerBookingsApi } from "../../bookings/api/bookings.api";
+import VenueSetupModal from "../components/VenueSetupModal";
+
 
 import SetupAlert from "../components/SetupAlert";
 
 const OwnerDashboard = () => {
   const [venues, setVenues] = useState([]);
   const [bookings, setBookings] = useState([]);
+  const [selectedVenue, setSelectedVenue] =
+  useState(null);
 
   useEffect(() => {
     loadData();
@@ -50,6 +54,9 @@ const OwnerDashboard = () => {
       <div className="max-w-7xl mx-auto px-5 py-10 mt-20">
         <SetupAlert
           incompleteVenues={incompleteVenues}
+          onComplete={(venue) =>
+            setSelectedVenue(venue)
+          }
         />
 
         <div className="grid md:grid-cols-3 gap-5">
@@ -91,7 +98,14 @@ const OwnerDashboard = () => {
           </div>
 
         </div>
-
+        {selectedVenue && (
+            <VenueSetupModal
+               venue={selectedVenue}
+               onClose={() => {
+                  setSelectedVenue(null);
+               }}
+            />
+         )}
       </div>
   );
 };

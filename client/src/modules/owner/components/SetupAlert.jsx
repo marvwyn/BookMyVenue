@@ -29,8 +29,7 @@ const SetupAlert = ({
  
              {incompleteVenues.length}
              {" "}
-             venue(s) require additional information.
- 
+             Additional information is required for this venue. The venue will be visible to customers only after all required information has been provided. 
           </p>
  
           <button

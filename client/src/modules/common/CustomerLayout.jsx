@@ -92,7 +92,7 @@ const MainLayout = ({ children }) => {
                   </button>
                 )}
 
-                {isOwner && (
+                {isOwner && isUser &&(
                   <button
                     onClick={() => {
                       navigate(isOwnerArea ? "/" : "/owner");
