@@ -7,6 +7,7 @@ import { useAdminAuth } from "../../../shared/context/AdminAuthContext";
 import { adminLoginApi } from "./../services/auth.service";
 import { ROUTES } from "../../../shared/constants/routes";
 
+import { showError } from "../../../shared/utils/toast";
 const inputClass = `
    w-full
    h-12
@@ -44,11 +45,9 @@ const AdminLoginForm = () => {
 
       loginAdmin(response.data.user, response.data.accessToken);
 
-      alert(response.message);
-
       navigate(ROUTES.ADMIN);
     } catch (error) {
-      alert(error.message);
+      showError(error.message);
     }
   };
 

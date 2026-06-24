@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 
 import { updateVenueApi } from "../../venues/api/venue.api";
 
+import { showError, showSuccess } from "../../../shared/utils/toast";
+
 const VenueSetupModal = ({ venue, onClose }) => {
     const [selectedFiles, setSelectedFiles] = useState([]);
 
@@ -43,7 +45,7 @@ const VenueSetupModal = ({ venue, onClose }) => {
             selectedFiles.length + files.length;
 
         if (totalFiles > 5) {
-            alert("You can upload a maximum of 5 images.");
+            showError("You can upload a maximum of 5 images.");
             return;
         }
 
@@ -85,10 +87,6 @@ const VenueSetupModal = ({ venue, onClose }) => {
                 );
             }
 
-            /*
-             If new images are selected,
-             replace existing images completely.
-            */
             selectedFiles.forEach((file) => {
                 formData.append("images", file);
             });
@@ -100,17 +98,11 @@ const VenueSetupModal = ({ venue, onClose }) => {
                 venue.id,
                 formData
             );
-
-            alert(
-                "Venue updated successfully"
-            );
-
+            showSuccess("Venue updated successfully")
+           
             onClose();
         } catch (error) {
-            alert(
-                error.message ||
-                "Failed to update venue"
-            );
+            showError(error.message || "Failed to update venue")
         }
     };
 

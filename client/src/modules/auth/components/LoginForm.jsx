@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { loginSchema } from '../validations/login.validation';
 import { loginApi } from '../services/auth.service';
 import { useAuth } from '../../../shared/context/CustomerAuthContext';
+import { showError } from "../../../shared/utils/toast";
 
 const inputClass = `
    w-full
@@ -62,13 +63,11 @@ const LoginForm = () => {
             response.data.accessToken
          );
          
-         alert(response.message);
-
          navigate('/');
 
       } catch (error) {
 
-         alert(error.message);
+         showError(error.message);
 
       }
 

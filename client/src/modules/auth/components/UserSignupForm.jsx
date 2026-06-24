@@ -7,6 +7,8 @@ import { userSignupSchema } from '../validations/signup.validation';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../shared/context/CustomerAuthContext';
 
+import { showError, showSuccess } from "../../../shared/utils/toast";
+
 import { ROUTES } from '../../../shared/constants/routes';
 
 const inputClass = `
@@ -55,18 +57,16 @@ const UserSignupForm = ({ onBack }) => {
          
          
          login(
-
             response.data.user,
-
             response.data.accessToken
-
          );
+         showSuccess(response.message);
 
          navigate(ROUTES.HOME);
 
       } catch (error) {
 
-         alert(error.message);
+         showError(error.message);
 
       }
 
