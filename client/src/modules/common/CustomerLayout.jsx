@@ -1,61 +1,55 @@
 import React, { useEffect, useState } from "react";
 import logo from "../../assets/bookmyvenue.webp";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router";
+
+import BecomePartnerModal from "../owner/components/BecomePartnerModal";
 import { useAuth } from "../../shared/context/CustomerAuthContext";
 
+
+
 const MainLayout = ({ children }) => {
-  const { user, logout, setActiveRole } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const activeRole = user?.activeRole;
+  const location = useLocation();                             
+  const isOwnerArea = location.pathname.startsWith("/owner");
 
-  const isOwner = activeRole === "OWNER";
-  const isUser = activeRole === "USER";
-
-  const hasOwnerRole = user?.roles?.includes("OWNER");
+  const isOwner = user?.roles?.includes("OWNER");
+  const isUser = user?.roles?.includes("USER");
 
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showPartnerModal, setShowPartnerModal] = useState(false); 
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", fn);
-
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
   useEffect(() => {
     const fn = () => {
-      if (window.innerWidth >= 1024) {
-        setMenuOpen(false);
-      }
+      if (window.innerWidth >= 1024) setMenuOpen(false);
     };
-
     window.addEventListener("resize", fn);
-
     return () => window.removeEventListener("resize", fn);
   }, []);
-
-
 
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 border-b border-gray-100 transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-[12px]" : "bg-white"
-          }`}
+        className={`fixed top-0 left-0 right-0 z-50 border-b border-gray-100 transition-all duration-300 ${
+          scrolled ? "bg-white/95 backdrop-blur-[12px]" : "bg-white"
+        }`}
       >
-        <div className="flex items-center justify-between h-[68px] px-5 sm:px-8 ">
+        <div className="flex items-center justify-between h-[68px] px-5 sm:px-8">
           {/* Logo */}
           <div className="flex items-center gap-2 font-extrabold text-lg tracking-tight shrink-0">
             <div className="w-20 h-auto bg-gray-900 rounded-[10px] flex items-center justify-center text-base">
               <img src={logo} alt="BookMyVenue" className="h-16 w-20" />
             </div>
-
             <span>BookMyVenue</span>
           </div>
 
-
-
-          {/* Desktop auth */}
           <div className="hidden lg:flex items-center gap-2.5">
             {!user ? (
               <>
@@ -65,7 +59,6 @@ const MainLayout = ({ children }) => {
                 >
                   Log In
                 </button>
-
                 <button
                   onClick={() => navigate("/signup")}
                   className="btn-primary !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
@@ -75,59 +68,47 @@ const MainLayout = ({ children }) => {
               </>
             ) : (
               <>
-                <span className="font-medium text-gray-700">
-                  Hi, {user.name}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-gray-700">
+                    Hi, {user.name}
+                  </span>
+                </div>
+
+                {isUser && !isOwner && (
+                  <button
+                    onClick={() => setShowPartnerModal(true)}  // ← modal
+                    className="btn-outline !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
+                  >
+                    Become a Partner
+                  </button>
+                )}
 
                 {isUser && (
-                  <>
-                    <button
-                      onClick={() => navigate("/account")}
-                      className="btn-outline !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
-                    >
-                      My Account
-                    </button>
-
-                    {!hasOwnerRole && (
-                      <button
-                        onClick={() => navigate("/become-partner")}
-                        className="btn-outline !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
-                      >
-                        Become a Partner
-                      </button>
-                    )}
-
-                    {hasOwnerRole && (
-                      <button
-                        onClick={() => {
-                          setActiveRole("OWNER");
-                          navigate("/owner");
-                        }}
-                        className="btn-primary !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
-                      >
-                        Switch to Owner
-                      </button>
-                    )}
-                  </>
+                  <button
+                    onClick={() => navigate("/account")}
+                    className="btn-outline !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
+                  >
+                    My Account
+                  </button>
                 )}
 
                 {isOwner && (
-                  <>
-                    <button
-                      onClick={() => {
-                        setActiveRole("USER");
-                        navigate("/");
-                      }}
-                      className="btn-outline !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
-                    >
-                      Customer Dashboard
-                    </button>
-                  </>
+                  <button
+                    onClick={() => {
+                      navigate(isOwnerArea ? "/" : "/owner");
+                      setMenuOpen(false);
+                    }}
+                    className="btn-primary !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
+                  >
+                    {isOwnerArea ? "Customer Dashboard" : "Owner Dashboard"}
+                  </button>
                 )}
+
                 <button
                   onClick={() => {
                     logout();
                     navigate("/");
+                    setMenuOpen(false);
                   }}
                   className="btn-outline !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
                 >
@@ -136,50 +117,37 @@ const MainLayout = ({ children }) => {
               </>
             )}
           </div>
-          {/* Mobile hamburger */}
+
+   
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="lg:hidden flex flex-col justify-center items-center w-9 h-9 gap-[5px]"
             aria-label="Toggle menu"
           >
-            <span
-              className={`block w-5 h-0.5 bg-gray-800 transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-1.5" : ""}`}
-            />
-            <span
-              className={`block w-5 h-0.5 bg-gray-800 transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`}
-            />
-            <span
-              className={`block w-5 h-0.5 bg-gray-800 transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-1.5" : ""}`}
-            />
+            <span className={`block w-5 h-0.5 bg-gray-800 transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-1.5" : ""}`} />
+            <span className={`block w-5 h-0.5 bg-gray-800 transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`} />
+            <span className={`block w-5 h-0.5 bg-gray-800 transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-1.5" : ""}`} />
           </button>
         </div>
 
-        {/* Mobile menu dropdown */}
-
+ 
         <div
-          className={`lg:hidden overflow-hidden transition-all duration-300 ${menuOpen ? "max-h-[600px]" : "max-h-0"
-            } bg-white border-t border-gray-100`}
+          className={`lg:hidden overflow-hidden transition-all duration-300 ${
+            menuOpen ? "max-h-[600px]" : "max-h-0"
+          } bg-white border-t border-gray-100`}
         >
-
           <div className="px-5 py-4 flex flex-col gap-1">
             <div className="flex flex-col gap-3 mt-3 pt-3 border-t border-gray-100">
               {!user ? (
                 <>
                   <button
-                    onClick={() => {
-                      navigate("/login");
-                      setMenuOpen(false);
-                    }}
+                    onClick={() => { navigate("/login"); setMenuOpen(false); }}
                     className="btn-outline"
                   >
                     Log In
                   </button>
-
                   <button
-                    onClick={() => {
-                      navigate("/signup");
-                      setMenuOpen(false);
-                    }}
+                    onClick={() => { navigate("/signup"); setMenuOpen(false); }}
                     className="btn-primary"
                   >
                     Sign Up
@@ -189,76 +157,41 @@ const MainLayout = ({ children }) => {
                 <>
                   <span className="font-medium">Hi, {user.name}</span>
 
+                  {isUser && !isOwner && (
+                    <button
+                      onClick={() => {
+                        setShowPartnerModal(true);           
+                        setMenuOpen(false);
+                      }}
+                      className="btn-outline"
+                    >
+                      Become a Partner
+                    </button>
+                  )}
+
                   {isUser && (
-                    <>
-                      <button
-                        onClick={() => {
-                          navigate("/account");
-                          setActiveRole("USER");
-                          setMenuOpen(false);
-                        }}
-                        className="btn-outline"
-                      >
-                        My Account
-                      </button>
-
-                      {!hasOwnerRole && (
-                        <button
-                          onClick={() => {
-                            navigate("/become-partner");
-                            setMenuOpen(false);
-                          }}
-                          className="btn-outline"
-                        >
-                          Become a Partner
-                        </button>
-                      )}
-
-                      {hasOwnerRole && (
-                        <button
-                          onClick={() => {
-                            navigate("/owner");
-                            setActiveRole("OWNER");
-                            setMenuOpen(false);
-                          }}
-                          className="btn-primary"
-                        >
-                          Owner Dashboard
-                        </button>
-                      )}
-                    </>
+                    <button
+                      onClick={() => { navigate("/account"); setMenuOpen(false); }}
+                      className="btn-outline"
+                    >
+                      My Account
+                    </button>
                   )}
 
                   {isOwner && (
-                    <>
-                      <button
-                        onClick={() => {
-                          navigate("/");
-                          setMenuOpen(false);
-                        }}
-                        className="btn-outline"
-                      >
-                        Customer Dashboard
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          navigate("/owner");
-                          setActiveRole("OWNER");
-                          setMenuOpen(false);
-                        }}
-                        className="btn-primary"
-                      >
-                        Owner Dashboard
-                      </button>
-                    </>
+                    <button
+                      onClick={() => {
+                        navigate(isOwnerArea ? "/" : "/owner");
+                        setMenuOpen(false);
+                      }}
+                      className="btn-primary"
+                    >
+                      {isOwnerArea ? "Customer Dashboard" : "Owner Dashboard"}
+                    </button>
                   )}
+
                   <button
-                    onClick={() => {
-                      logout();
-                      navigate("/");
-                      setMenuOpen(false);
-                    }}
+                    onClick={() => { logout(); navigate("/"); setMenuOpen(false); }}
                     className="btn-outline"
                   >
                     Logout
@@ -269,8 +202,15 @@ const MainLayout = ({ children }) => {
           </div>
         </div>
       </nav>
+
       <main>{children}</main>
-      {/* ── FOOTER ── */}
+
+      {/* Modal */}
+      {showPartnerModal && (
+        <BecomePartnerModal onClose={() => setShowPartnerModal(false)} />
+      )}
+
+      {/* Footer */}
       <footer className="border-t border-gray-100 py-8 px-5 sm:px-8 lg:px-[6%]">
         <div className="max-w-[1200px] mx-auto flex flex-col items-center gap-4 text-center">
           <div className="flex items-center gap-2">
@@ -279,11 +219,9 @@ const MainLayout = ({ children }) => {
             </div>
             <span className="font-medium text-[0.95rem]">BookMyVenue</span>
           </div>
-
           <p className="text-gray-400 text-[0.82rem] leading-[1.7] max-w-[240px]">
             India's most trusted platform for booking venues for every occasion.
           </p>
-
           <span className="text-[0.75rem] text-gray-300">
             © 2026 BookMyVenue. All rights reserved.
           </span>

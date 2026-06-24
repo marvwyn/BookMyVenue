@@ -1,10 +1,9 @@
+import { useAuth } from "../../../shared/context/CustomerAuthContext";
+
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-
-
-import { useAuth } from "../../../shared/context/AuthContext";
 import axiosInstance from "../../../shared/services/axios";
 
 const venueSchema = z.object({
@@ -60,11 +59,7 @@ const BecomePartnerModal = ({ onClose }) => {
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm px-4"
       onClick={onClose}
     >
-      <div
-        className="bg-white rounded-2xl shadow-xl w-full max-w-md p-7 relative"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Close button */}
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-7 relative">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl leading-none"
@@ -80,7 +75,6 @@ const BecomePartnerModal = ({ onClose }) => {
         </p>
 
         <div className="flex flex-col gap-4">
-          {/* Venue Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Venue Name
@@ -95,7 +89,6 @@ const BecomePartnerModal = ({ onClose }) => {
             )}
           </div>
 
-          {/* Venue Type */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Venue Type
@@ -116,7 +109,6 @@ const BecomePartnerModal = ({ onClose }) => {
             )}
           </div>
 
-          {/* City */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               City

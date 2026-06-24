@@ -60,12 +60,13 @@ export const adminLoginController = async (req, res, next) => {
   }
 };
 
+
 export const becomeOwnerController = async (req, res, next) => {
-   try {
-      const userId = req.user.userId; 
-      const result = await becomeOwner(userId, req.body);
-      res.status(STATUS_CODES.OK,SUCCESS_MESSAGES.ACCOUNT_CREATED).json(result);
-   } catch (err) {
-      next(err);
-   }
+  try {
+    const userId = req.user.userId;
+    const result = await becomeOwner(userId, req.body); 
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
 };

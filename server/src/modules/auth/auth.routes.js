@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { signupController, loginController, adminLoginController, becomeOwnerController } from './auth.controller.js';
 import { signupSchema, loginSchema, venueSchema } from './auth.validation.js';
 import { validate } from '../../shared/middlewares/validate.middleware.js';
+import { authenticate } from './auth.middleware.js';
 
 const authRoutes = Router();
 
@@ -26,9 +27,9 @@ authRoutes.post(
 
 authRoutes.post(
    '/become-owner',
+   authenticate,
    validate(venueSchema), 
    becomeOwnerController
 );
-
 
 export default authRoutes;
