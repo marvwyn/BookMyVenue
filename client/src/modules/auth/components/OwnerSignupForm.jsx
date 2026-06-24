@@ -8,6 +8,8 @@ import { useAuth } from "../../../shared/context/CustomerAuthContext";
 
 import { ROUTES } from '../../../shared/constants/routes';
 
+import { showError, showSuccess } from "../../../shared/utils/toast";
+
 const inputClass = `
    w-full
    h-12
@@ -34,35 +36,42 @@ const OwnerSignupForm = ({ onBack }) => {
   });
 
   const onSubmit = async (data) => {
-    const payload = {
-      accountType: "OWNER",
+    try {
+      const payload = {
+        accountType: "OWNER",
 
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      password: data.password,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        password: data.password,
 
-      venue: {
-        name: data.venueName,
+        venue: {
+          name: data.venueName,
 
-        type: data.venueType,
+          type: data.venueType,
 
-        city: data.city,
-      },
-    };
-
-    const response = await signupApi(payload);
-    login(response.data.user, response.data.accessToken);
-    navigate(
-
-      ROUTES.OWNER,
-
-      {
-        state: {
-          openVenueSetup: true,
+          city: data.city,
         },
-      }
-    );
+      };
+
+      const response = await signupApi(payload);
+
+      login(response.data.user, response.data.accessToken);
+      showSuccess(response.message)
+      navigate(
+
+        ROUTES.OWNER,
+
+        {
+          state: {
+            openVenueSetup: true,
+          },
+        }
+      );
+    } catch (error) {
+      showError(error.message);
+
+    }
   };
 
   return (
