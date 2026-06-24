@@ -11,6 +11,7 @@ export const API_ROUTES = {
 
   USERS: {
     MY_VENUES: "/users/me/venues",
+    BECOME_A_PARTNER:"/auth/become-owner"
   },
 
   ADMIN: {
@@ -21,5 +22,7 @@ export const API_ROUTES = {
     BASE: "/bookings",
     MY_BOOKINGS: "/bookings/my",
     OWNER_BOOKINGS: "/bookings/owner",
+    
   },
+
 };

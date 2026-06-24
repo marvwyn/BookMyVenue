@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import axiosInstance from "../../../shared/services/axios";
+import { API_ROUTES } from "../../../shared/constants/apiRoutes";
+import { becomePartnerApi } from "../api/owner.api";
 
 const venueSchema = z.object({
   name: z.string().min(1, "Venue name is required"),
@@ -46,8 +48,13 @@ const BecomePartnerModal = ({ onClose }) => {
 
   const onSubmit = async (data) => {
     try {
-      const res = await axiosInstance.post("/auth/become-owner", data);
-      login(res.data.user, res.data.accessToken);
+      const res = await becomePartnerApi({
+        name: data.name,
+        type: data.type,
+        city: data.city,
+      });
+
+      login(res.user, res.accessToken);
       onClose();
     } catch (err) {
       alert(err.response?.data?.message || "Something went wrong");
@@ -59,7 +66,10 @@ const BecomePartnerModal = ({ onClose }) => {
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm px-4"
       onClick={onClose}
     >
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-7 relative">
+      <div
+        className="bg-white rounded-2xl shadow-xl w-full max-w-md p-7 relative"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl leading-none"
@@ -75,6 +85,7 @@ const BecomePartnerModal = ({ onClose }) => {
         </p>
 
         <div className="flex flex-col gap-4">
+   
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Venue Name
@@ -88,6 +99,7 @@ const BecomePartnerModal = ({ onClose }) => {
               <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
             )}
           </div>
+
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -109,6 +121,7 @@ const BecomePartnerModal = ({ onClose }) => {
             )}
           </div>
 
+   
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               City
