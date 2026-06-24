@@ -62,90 +62,94 @@ const BecomePartnerModal = ({ onClose }) => {
   };
 
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm px-4"
-      onClick={onClose}
-    >
+    <>
       <div
-        className="bg-white rounded-2xl shadow-xl w-full max-w-md p-7 relative"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl leading-none"
-        >
-          ✕
-        </button>
+        className="fixed inset-0 z-[100] bg-black/40 backdrop-blur-sm"
+        onClick={onClose}
+      />
 
-        <h2 className="text-xl font-bold text-gray-900 mb-1">
-          Become a Partner
-        </h2>
-        <p className="text-sm text-gray-500 mb-6">
-          Register your venue and start accepting bookings.
-        </p>
-
-        <div className="flex flex-col gap-4">
-   
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Venue Name
-            </label>
-            <input
-              {...register("name")}
-              placeholder="e.g. The Grand Hall"
-              className="w-full h-12 px-4 rounded-xl border border-gray-300 focus:border-red-500 focus:ring-4 focus:ring-red-100 outline-none transition"
-            />
-            {errors.name && (
-              <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
-            )}
-          </div>
-
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Venue Type
-            </label>
-            <select
-              {...register("type")}
-              className="w-full h-12 px-4 rounded-xl border border-gray-300 focus:border-red-500 focus:ring-4 focus:ring-red-100 outline-none transition bg-white"
-            >
-              <option value="">Select type</option>
-              {VENUE_TYPES.map((t) => (
-                <option key={t.value} value={t.value}>
-                  {t.label}
-                </option>
-              ))}
-            </select>
-            {errors.type && (
-              <p className="text-red-500 text-xs mt-1">{errors.type.message}</p>
-            )}
-          </div>
-
-   
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              City
-            </label>
-            <input
-              {...register("city")}
-              placeholder="e.g. Mumbai"
-              className="w-full h-12 px-4 rounded-xl border border-gray-300 focus:border-red-500 focus:ring-4 focus:ring-red-100 outline-none transition"
-            />
-            {errors.city && (
-              <p className="text-red-500 text-xs mt-1">{errors.city.message}</p>
-            )}
-          </div>
-
+      <div className="fixed inset-0 z-[101] flex items-center justify-center px-4 pointer-events-none">
+        <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-7 relative pointer-events-auto">
           <button
-            onClick={handleSubmit(onSubmit)}
-            disabled={isSubmitting}
-            className="w-full h-12 rounded-xl bg-red-600 text-white font-semibold mt-2 disabled:opacity-60"
+            onClick={onClose}
+            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl leading-none"
           >
-            {isSubmitting ? "Submitting..." : "Register My Venue"}
+            ✕
           </button>
+
+          <h2 className="text-xl font-bold text-gray-900 mb-1">
+            Become a Partner
+          </h2>
+          <p className="text-sm text-gray-500 mb-6">
+            Register your venue and start accepting bookings.
+          </p>
+
+          <div className="flex flex-col gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Venue Name
+              </label>
+              <input
+                {...register("name")}
+                placeholder="e.g. The Grand Hall"
+                className="w-full h-12 px-4 rounded-xl border border-gray-300 focus:border-red-500 focus:ring-4 focus:ring-red-100 outline-none transition"
+              />
+              {errors.name && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.name.message}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Venue Type
+              </label>
+              <select
+                {...register("type")}
+                className="w-full h-12 px-4 rounded-xl border border-gray-300 focus:border-red-500 focus:ring-4 focus:ring-red-100 outline-none transition bg-white"
+              >
+                <option value="">Select type</option>
+                {VENUE_TYPES.map((t) => (
+                  <option key={t.value} value={t.value}>
+                    {t.label}
+                  </option>
+                ))}
+              </select>
+              {errors.type && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.type.message}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                City
+              </label>
+              <input
+                {...register("city")}
+                placeholder="e.g. Mumbai"
+                className="w-full h-12 px-4 rounded-xl border border-gray-300 focus:border-red-500 focus:ring-4 focus:ring-red-100 outline-none transition"
+              />
+              {errors.city && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.city.message}
+                </p>
+              )}
+            </div>
+
+            <button
+              onClick={handleSubmit(onSubmit)}
+              disabled={isSubmitting}
+              className="w-full h-12 rounded-xl bg-red-600 text-white font-semibold mt-2 disabled:opacity-60"
+            >
+              {isSubmitting ? "Submitting..." : "Register My Venue"}
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
