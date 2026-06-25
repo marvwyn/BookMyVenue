@@ -11,7 +11,8 @@ import {
   getVenuesService,
   createVenueService,
   updateVenueService,
-  getMyVenuesService
+  getMyVenuesService,
+  becomeOwner
 } from "./venues.service.js";
 import { uploadImages } from "../../shared/services/storage/storage.service.js";
 
@@ -153,5 +154,15 @@ export const getMyVenues = async (
       );
   } catch (error) {
     next(error);
+  }
+};
+
+export const becomeOwnerController = async (req, res, next) => {
+  try {
+    const userId = req.user.userId;
+    const result = await becomeOwner(userId, req.body);
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
   }
 };

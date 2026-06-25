@@ -47,19 +47,3 @@ export const loginSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
-export const venueSchema = z.object({
-  name: z.string().min(1, "Venue name is required"),
-  type: z.enum(
-    [
-      "AUDITORIUM",
-      "BANQUET_HALL",
-      "CAFE",
-      "RESTAURANT",
-      "CONFERENCE_ROOM",
-      "STUDIO",
-      "OUTDOOR_SPACE",
-      "OTHER",
-    ],
-  ),
-  city: z.string(),
-});

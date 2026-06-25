@@ -2,11 +2,9 @@ import prisma from "../../shared/config/db.js";
 import { ERROR_MESSAGES } from "../../shared/constants/messages.js";
 import { STATUS_CODES } from "../../shared/constants/statusCodes.js";
 import ApiError from "../../shared/utils/apiError.js";
+import { generateAccessToken } from "../../shared/utils/jwt.js";
 
-export const createVenueService = async (
-  venueData,
-  ownerId
-) => {
+export const createVenueService = async (venueData, ownerId) => {
   return prisma.venue.create({
     data: {
       name: venueData.name,
@@ -43,9 +41,7 @@ export const getVenuesService = async () => {
   });
 };
 
-export const getMyVenuesService = async (
-  ownerId
-) => {
+export const getMyVenuesService = async (ownerId) => {
   return prisma.venue.findMany({
     where: {
       ownerId,
@@ -56,9 +52,7 @@ export const getMyVenuesService = async (
   });
 };
 
-export const getVenueByIdService = async (
-  id
-) => {
+export const getVenueByIdService = async (id) => {
   return prisma.venue.findUnique({
     where: {
       id,
@@ -75,11 +69,7 @@ export const getVenueByIdService = async (
   });
 };
 
-export const updateVenueService = async (
-  id,
-  venueData,
-  ownerId
-) => {
+export const updateVenueService = async (id, venueData, ownerId) => {
   const venue = await prisma.venue.findUnique({
     where: {
       id,
@@ -87,17 +77,11 @@ export const updateVenueService = async (
   });
 
   if (!venue) {
-    throw new ApiError(
-      STATUS_CODES.NOT_FOUND,
-      ERROR_MESSAGES.VENUE_NOT_FOUND
-    );
+    throw new ApiError(STATUS_CODES.NOT_FOUND, ERROR_MESSAGES.VENUE_NOT_FOUND);
   }
 
   if (venue.ownerId !== ownerId) {
-    throw new ApiError(
-      STATUS_CODES.FORBIDDEN,
-      "You cannot update this venue"
-    );
+    throw new ApiError(STATUS_CODES.FORBIDDEN, "You cannot update this venue");
   }
 
   return prisma.venue.update({
@@ -121,10 +105,7 @@ export const updateVenueService = async (
   });
 };
 
-export const deleteVenueService = async (
-  id,
-  ownerId
-) => {
+export const deleteVenueService = async (id, ownerId) => {
   const venue = await prisma.venue.findUnique({
     where: {
       id,
@@ -132,17 +113,11 @@ export const deleteVenueService = async (
   });
 
   if (!venue) {
-    throw new ApiError(
-      STATUS_CODES.NOT_FOUND,
-      ERROR_MESSAGES.VENUE_NOT_FOUND
-    );
+    throw new ApiError(STATUS_CODES.NOT_FOUND, ERROR_MESSAGES.VENUE_NOT_FOUND);
   }
 
   if (venue.ownerId !== ownerId) {
-    throw new ApiError(
-      STATUS_CODES.FORBIDDEN,
-      "You cannot delete this venue"
-    );
+    throw new ApiError(STATUS_CODES.FORBIDDEN, "You cannot delete this venue");
   }
 
   await prisma.venue.delete({
@@ -152,4 +127,57 @@ export const deleteVenueService = async (
   });
 
   return true;
+};
+
+export const becomeOwner = async (userId, venueData) => {
+  const existingOwnerRole = await prisma.userRole.findFirst({
+    where: { userId, role: "OWNER" },
+  });
+
+  if (existingOwnerRole) {
+    throw new ApiError(STATUS_CODES.BAD_REQUEST, "User is already an owner");
+  }
+
+  await prisma.$transaction(async (tx) => {
+    await tx.userRole.create({
+      data: { userId, role: "OWNER" },
+    });
+
+    await tx.venue.create({
+      data: {
+        ownerId: userId,
+        name: venueData.name,
+        type: venueData.type,
+        city: venueData.city,
+        address: venueData.address,
+        description: venueData.description,
+
+        capacity: venueData.capacity ? Number(venueData.capacity) : null,
+
+        price: venueData.price ? Number(venueData.price) : null,
+
+        images: venueData.images || [],
+      },
+    });
+  });
+
+  const userWithRoles = await prisma.user.findUnique({
+    where: { id: userId },
+    include: { roles: true },
+  });
+
+  const accessToken = generateAccessToken({
+    userId: userWithRoles.id,
+    roles: userWithRoles.roles.map((r) => r.role),
+  });
+
+  return {
+    accessToken,
+    user: {
+      id: userWithRoles.id,
+      name: userWithRoles.name,
+      email: userWithRoles.email,
+      roles: userWithRoles.roles.map((r) => r.role),
+    },
+  };
 };

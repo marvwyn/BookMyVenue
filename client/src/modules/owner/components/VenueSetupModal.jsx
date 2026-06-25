@@ -409,7 +409,6 @@ const VenueSetupModal = ({ venue, onClose }) => {
               </div>
             </div>
           )}
-
           {/* Footer */}
 
           <div
