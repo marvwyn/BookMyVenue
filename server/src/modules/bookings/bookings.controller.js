@@ -3,6 +3,8 @@ import {
     getMyBookingsService,
     getOwnerBookingsService,
     updateBookingStatusService,
+    cancelBookingService,
+    completeBookingService,
   } from "./bookings.service.js";
   
   import ApiResponse from "../../shared/utils/apiResponse.js";
@@ -88,4 +90,64 @@ import {
       } catch (error) {
         next(error);
       }
+    };
+
+    export const cancelBooking = async (req, res, next) => {
+
+      try {
+    
+        const booking = await cancelBookingService(
+    
+          req.params.id,
+    
+          req.user.userId
+    
+        );
+    
+        res.status(STATUS_CODES.OK).json({
+    
+          success: true,
+    
+          message: "Booking cancelled successfully.",
+    
+          data: booking,
+    
+        });
+    
+      } catch (error) {
+    
+        next(error);
+    
+      }
+    
+    };
+    
+    export const completeBooking = async (req, res, next) => {
+    
+      try {
+    
+        const booking = await completeBookingService(
+    
+          req.params.id,
+    
+          req.user.userId
+    
+        );
+    
+        res.status(STATUS_CODES.OK).json({
+    
+          success: true,
+    
+          message: "Booking completed successfully.",
+    
+          data: booking,
+    
+        });
+    
+      } catch (error) {
+    
+        next(error);
+    
+      }
+    
     };

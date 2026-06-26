@@ -11,12 +11,12 @@ import {
   getVenuesService,
   createVenueService,
   updateVenueService,
-  getMyVenuesService
+  getMyVenuesService,
+  getVenueAvailabilityService
 } from "./venues.service.js";
 import { uploadImages } from "../../shared/services/storage/storage.service.js";
 
 export const createVenue = async (req, res, next) => {
-  console.log("USER:", req.user.userId);
   try {
     const venue = await createVenueService(req.body, req.user.userId);
     return res
@@ -154,4 +154,26 @@ export const getMyVenues = async (
   } catch (error) {
     next(error);
   }
+};
+
+export const getVenueAvailability = async (
+  req,
+  res,
+  next
+) => {
+
+  try {
+    const availability =
+      await getVenueAvailabilityService(
+        req.params.id
+      );
+    res.status(STATUS_CODES.OK).json({
+      success: true,
+      data: availability,
+    });
+
+  } catch (error) {
+    next(error);
+  }
+
 };

@@ -1,10 +1,10 @@
-import axiosInstance from "../../../shared/services/axios";
+import adminAxios from "../../../shared/services/adminAxios";
 
 export const fetchAdminVenuesApi =
    async () => {
 
       const response =
-         await axiosInstance.get(
+         await adminAxios.get(
             "/venues"
          );
 
@@ -18,7 +18,7 @@ export const updateVenueStatusApi =
    ) => {
 
       const response =
-         await axiosInstance.patch(
+         await adminAxios.patch(
             `/admin/venues/${venueId}/status`,
             {
                status,

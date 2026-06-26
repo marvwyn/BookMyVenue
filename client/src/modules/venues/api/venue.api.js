@@ -57,4 +57,9 @@ export const createBookingApi = async(payload)=>{
   return response.data;
 }
 
- 
+export const fetchVenueAvailabilityApi = async (id) => {
+  const response = await axiosInstance.get(
+    `${API_ROUTES.VENUES.BASE}/${id}/availability`
+  );
+  return response.data;
+};

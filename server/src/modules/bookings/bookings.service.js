@@ -6,7 +6,15 @@ import { STATUS_CODES } from "../../shared/constants/statusCodes.js";
 
 export const createBookingService =
   async (data, userId) => {
+    const startDate = new Date(data.startDate);
+    const endDate = new Date(data.endDate);
 
+    if (startDate > endDate) {
+      throw new ApiError(
+        STATUS_CODES.BAD_REQUEST,
+        "Invalid booking dates"
+      );
+    }
     const venue =
       await prisma.venue.findUnique({
         where: {
@@ -42,7 +50,10 @@ export const createBookingService =
       await prisma.booking.findFirst({
         where: {
           venueId: data.venueId,
-          status: "CONFIRMED",
+
+          status: {
+            not: "CANCELLED"
+          },
 
           startDate: {
             lte: new Date(data.endDate),
@@ -67,7 +78,7 @@ export const createBookingService =
           new Date(data.endDate) -
           new Date(data.startDate)
         ) /
-          (1000 * 60 * 60 * 24)
+        (1000 * 60 * 60 * 24)
       ) + 1;
 
     const totalPrice =
@@ -187,4 +198,84 @@ export const updateBookingStatusService =
         status,
       },
     });
+  };
+
+export const cancelBookingService =
+  async (bookingId, ownerId) => {
+
+    const booking =
+      await prisma.booking.findUnique({
+
+        where: { id: bookingId },
+
+        include: {
+          venue: true
+        }
+
+      });
+
+    if (!booking) {
+      throw new ApiError(
+        STATUS_CODES.NOT_FOUND,
+        "Booking not found"
+      );
+    }
+
+    if (booking.venue.ownerId !== ownerId) {
+      throw new ApiError(
+        STATUS_CODES.FORBIDDEN,
+        "Not authorized"
+      );
+    }
+
+    return prisma.booking.update({
+
+      where: { id: bookingId },
+
+      data: {
+        status: "CANCELLED"
+      }
+
+    });
+
+  };
+
+export const completeBookingService =
+  async (bookingId, ownerId) => {
+
+    const booking =
+      await prisma.booking.findUnique({
+
+        where: { id: bookingId },
+
+        include: {
+          venue: true
+        }
+
+      });
+
+    if (!booking) {
+      throw new ApiError(
+        STATUS_CODES.NOT_FOUND,
+        "Booking not found"
+      );
+    }
+
+    if (booking.venue.ownerId !== ownerId) {
+      throw new ApiError(
+        STATUS_CODES.FORBIDDEN,
+        "Not authorized"
+      );
+    }
+
+    return prisma.booking.update({
+
+      where: { id: bookingId },
+
+      data: {
+        status: "COMPLETED"
+      }
+
+    });
+
   };

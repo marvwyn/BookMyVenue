@@ -107,7 +107,7 @@ model Booking {
 
   totalPrice  Decimal? @db.Decimal(10,2)
 
-  status      BookingStatus @default(PENDING)
+  status      BookingStatus @default(CONFIRMED)
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -118,9 +118,7 @@ model Booking {
 }
 
 enum BookingStatus {
-  PENDING
   CONFIRMED
-  REJECTED
   CANCELLED
   COMPLETED
 }

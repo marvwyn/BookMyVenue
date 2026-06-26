@@ -14,7 +14,6 @@ export const authenticate = (
    try {
 
       const authHeader = req.headers.authorization?.trim();
-
       if (
          !authHeader ||
          !authHeader.startsWith('Bearer ')
