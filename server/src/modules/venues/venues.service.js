@@ -153,3 +153,33 @@ export const deleteVenueService = async (
 
   return true;
 };
+
+export const getVenueAvailabilityService =
+  async (venueId) => {
+
+    return prisma.booking.findMany({
+
+      where: {
+
+        venueId,
+
+        status: {
+          not: "CANCELLED"
+        }
+
+      },
+
+      select: {
+
+        startDate: true,
+        endDate: true
+
+      },
+
+      orderBy: {
+        startDate: "asc"
+      }
+
+    });
+
+  };

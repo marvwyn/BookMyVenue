@@ -5,6 +5,8 @@ import {
   getMyBookings,
   getOwnerBookings,
   updateBookingStatus,
+  cancelBooking,
+  completeBooking,
 } from "./bookings.controller.js";
 
 import {authenticate} from "../../shared/middlewares/auth.middleware.js";
@@ -18,9 +20,9 @@ import {
     updateBookingStatusSchema,
   } from "./bookings.validation.js";
 
-const router = express.Router();
+const bookingRoutes = express.Router();
 
-router.post(
+bookingRoutes.post(
   "/",
   authenticate,
   authorize("USER"),
@@ -28,20 +30,20 @@ router.post(
   createBooking
 );
 
-router.get(
+bookingRoutes.get(
   "/my",
   authenticate,
   getMyBookings
 );
 
-router.get(
+bookingRoutes.get(
   "/owner",
   authenticate,
   authorize("OWNER"),
   getOwnerBookings
 );
 
-router.patch(
+bookingRoutes.patch(
   "/:id/status",
   authenticate,
   authorize("OWNER"),
@@ -49,4 +51,18 @@ router.patch(
   updateBookingStatus
 );
 
-export default router;
+bookingRoutes.patch(
+  "/:id/cancel",
+  authenticate,
+  authorize("OWNER"),
+  cancelBooking
+);
+
+bookingRoutes.patch(
+  "/:id/complete",
+  authenticate,
+  authorize("OWNER"),
+  completeBooking
+);
+
+export default bookingRoutes;
