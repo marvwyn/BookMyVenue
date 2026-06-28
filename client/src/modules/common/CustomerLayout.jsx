@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import logo from "../../assets/bookmyvenue.webp";
 import { useNavigate, useLocation } from "react-router";
 
-import BecomePartnerModal from "../owner/components/BecomePartnerModal";
 import { useAuth } from "../../shared/context/CustomerAuthContext";
 
 
@@ -10,7 +9,7 @@ import { useAuth } from "../../shared/context/CustomerAuthContext";
 const MainLayout = ({ children }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();                             
+  const location = useLocation();
   const isOwnerArea = location.pathname.startsWith("/owner");
 
   const isOwner = user?.roles?.includes("OWNER");
@@ -18,7 +17,6 @@ const MainLayout = ({ children }) => {
 
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [showPartnerModal, setShowPartnerModal] = useState(false); 
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 50);
@@ -37,9 +35,8 @@ const MainLayout = ({ children }) => {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 border-b border-gray-100 transition-all duration-300 ${
-          scrolled ? "bg-white/95 backdrop-blur-[12px]" : "bg-white"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 border-b border-gray-100 transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-[12px]" : "bg-white"
+          }`}
       >
         <div className="flex items-center justify-between h-[68px] px-5 sm:px-8">
           {/* Logo */}
@@ -76,7 +73,7 @@ const MainLayout = ({ children }) => {
 
                 {isUser && !isOwner && (
                   <button
-                    onClick={() => setShowPartnerModal(true)}  // ← modal
+                    onClick={() => navigate("/become-partner")}
                     className="btn-outline !py-[9px] !px-5 !text-[0.88rem] !rounded-[10px]"
                   >
                     Become a Partner
@@ -92,7 +89,7 @@ const MainLayout = ({ children }) => {
                   </button>
                 )}
 
-                {isOwner && isUser &&(
+                {isOwner && isUser && (
                   <button
                     onClick={() => {
                       navigate(isOwnerArea ? "/" : "/owner");
@@ -118,7 +115,7 @@ const MainLayout = ({ children }) => {
             )}
           </div>
 
-   
+
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="lg:hidden flex flex-col justify-center items-center w-9 h-9 gap-[5px]"
@@ -130,11 +127,10 @@ const MainLayout = ({ children }) => {
           </button>
         </div>
 
- 
+
         <div
-          className={`lg:hidden overflow-hidden transition-all duration-300 ${
-            menuOpen ? "max-h-[600px]" : "max-h-0"
-          } bg-white border-t border-gray-100`}
+          className={`lg:hidden overflow-hidden transition-all duration-300 ${menuOpen ? "max-h-[600px]" : "max-h-0"
+            } bg-white border-t border-gray-100`}
         >
           <div className="px-5 py-4 flex flex-col gap-1">
             <div className="flex flex-col gap-3 mt-3 pt-3 border-t border-gray-100">
@@ -160,7 +156,7 @@ const MainLayout = ({ children }) => {
                   {isUser && !isOwner && (
                     <button
                       onClick={() => {
-                        setShowPartnerModal(true);           
+                        navigate("/become-partner");
                         setMenuOpen(false);
                       }}
                       className="btn-outline"
@@ -205,10 +201,7 @@ const MainLayout = ({ children }) => {
 
       <main>{children}</main>
 
-      {/* Modal */}
-      {showPartnerModal && (
-        <BecomePartnerModal onClose={() => setShowPartnerModal(false)} />
-      )}
+
 
       {/* Footer */}
       <footer className="border-t border-gray-100 py-8 px-5 sm:px-8 lg:px-[6%]">

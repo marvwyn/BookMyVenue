@@ -25,4 +25,11 @@ export const API_ROUTES = {
   ACCOUNT: {
     BASE: "/account",
   },
+
+  OWNER: {
+    ONBOARDING:
+      "/owner/onboarding",
+    PROFILE:
+      "/owner/profile",s
+  },
 };

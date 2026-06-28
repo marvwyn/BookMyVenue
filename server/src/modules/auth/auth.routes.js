@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { signupController, loginController, adminLoginController, becomeOwnerController } from './auth.controller.js';
+import { signupController, loginController, adminLoginController } from './auth.controller.js';
 import { signupSchema, loginSchema, venueSchema } from './auth.validation.js';
 import { validate } from '../../shared/middlewares/validate.middleware.js';
 import { authenticate } from './auth.middleware.js';
@@ -23,13 +23,6 @@ authRoutes.post(
    '/admin/login',
    validate(loginSchema),
    adminLoginController
-);
-
-authRoutes.post(
-   '/become-owner',
-   authenticate,
-   validate(venueSchema), 
-   becomeOwnerController
 );
 
 export default authRoutes;
