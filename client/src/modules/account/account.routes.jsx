@@ -16,11 +16,11 @@ export const accountRoutes = [
         element: <AccountPage />,
       },
       {
-        path: "bookings",
+        path: ROUTES.BOOKINGS,
         element: <MyBookingsPage />,
       },
       {
-        path: "bookings/:id",
+        path: ROUTES.BOOKING_DETAILS,
         element: <BookingDetailsPage />,
       },
     ],

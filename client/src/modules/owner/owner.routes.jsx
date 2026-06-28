@@ -5,8 +5,10 @@ import OwnerDashboard from "./pages/OwnerDashboard";
 import OwnerVenuesPage from "./pages/OwnerVenuesPage";
 import OwnerBookingsPage from "./pages/OwnerBookingsPage";
 import OwnerLayout from "./components/OwnerLayout";
+import OwnerOnboardingPage from "./pages/OwnerOnboardingPage";
 
 import OwnerProtectedRoute from "../../shared/guards/OwnerProtectedRoute";
+
 
 const ownerRoutes = [
    {
@@ -30,7 +32,7 @@ const ownerRoutes = [
          {
             path: "bookings",
             element: <OwnerBookingsPage />,
-         },
+         }
       ],
    },
 ];

@@ -7,6 +7,7 @@ import { homeRoutes } from "../modules/home/home.routes";
 import { adminRoutes } from "../modules/admin/admin.routes";
 import { bookingRoutes } from "../modules/bookings/bookings.routes";
 import { accountRoutes } from "../modules/account/account.routes";
+import { ownerOnboardingRoutes } from "../modules/owner/owner.onboarding.routes";
 
 const router = createBrowserRouter([
    ...homeRoutes,
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
    ...adminRoutes,
    ...bookingRoutes,
    ...accountRoutes,
+   ...ownerOnboardingRoutes
 ]);
 
 export default router;
