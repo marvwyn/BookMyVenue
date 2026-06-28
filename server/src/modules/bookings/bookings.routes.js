@@ -7,6 +7,7 @@ import {
   updateBookingStatus,
   cancelBooking,
   completeBooking,
+  getBookingById
 } from "./bookings.controller.js";
 
 import {authenticate} from "../../shared/middlewares/auth.middleware.js";
@@ -63,6 +64,13 @@ bookingRoutes.patch(
   authenticate,
   authorize("OWNER"),
   completeBooking
+);
+
+bookingRoutes.get(
+  "/:id",
+  authenticate,
+  authorize("USER"),
+  getBookingById
 );
 
 export default bookingRoutes;

@@ -22,4 +22,7 @@ export const API_ROUTES = {
     MY_BOOKINGS: "/bookings/my",
     OWNER_BOOKINGS: "/bookings/owner",
   },
+  ACCOUNT: {
+    BASE: "/account",
+  },
 };

@@ -5,6 +5,7 @@ import {
     updateBookingStatusService,
     cancelBookingService,
     completeBookingService,
+    getBookingByIdService
   } from "./bookings.service.js";
   
   import ApiResponse from "../../shared/utils/apiResponse.js";
@@ -150,4 +151,27 @@ import {
     
       }
     
+    };
+
+    export const getBookingById = async (
+      req,
+      res,
+      next
+    ) => {
+      try {
+    
+        const booking =
+          await getBookingByIdService(
+            req.params.id,
+            req.user.userId
+          );
+    
+        res.status(STATUS_CODES.OK).json({
+          success: true,
+          data: booking,
+        });
+    
+      } catch (error) {
+        next(error);
+      }
     };

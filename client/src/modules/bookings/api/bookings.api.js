@@ -39,3 +39,14 @@ export const updateBookingStatusApi = async (
 
    return response.data;
 };
+
+export const fetchBookingDetailsApi = async (
+   bookingId
+ ) => {
+   const response =
+     await axiosInstance.get(
+       `${API_ROUTES.BOOKINGS.BASE}/${bookingId}`
+     );
+ 
+   return response.data;
+ };
