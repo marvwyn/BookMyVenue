@@ -279,3 +279,45 @@ export const completeBookingService =
     });
 
   };
+
+  export const getBookingByIdService = async (
+    bookingId,
+    userId
+  ) => {
+    const booking =
+      await prisma.booking.findUnique({
+        where: {
+          id: bookingId,
+        },
+  
+        include: {
+          venue: {
+            include: {
+              owner: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                },
+              },
+            },
+          },
+        },
+      });
+  
+    if (!booking) {
+      throw new ApiError(
+        STATUS_CODES.NOT_FOUND,
+        "Booking not found"
+      );
+    }
+  
+    if (booking.userId !== userId) {
+      throw new ApiError(
+        STATUS_CODES.FORBIDDEN,
+        "Not authorized to view this booking"
+      );
+    }
+  
+    return booking;
+  };
