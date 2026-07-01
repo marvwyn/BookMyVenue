@@ -7,6 +7,7 @@ export const API_ROUTES = {
 
   VENUES: {
     BASE: "/venues",
+    NEARBY: "/venues/nearby",
   },
 
   USERS: {
@@ -30,6 +31,6 @@ export const API_ROUTES = {
     ONBOARDING:
       "/owner/onboarding",
     PROFILE:
-      "/owner/profile",s
+      "/owner/profile",
   },
 };

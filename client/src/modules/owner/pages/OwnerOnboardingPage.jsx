@@ -16,6 +16,8 @@ import { ownerOnboardingSchema } from "../validation/onboarding.schema";
 
 import { onboardOwnerApi } from "../api/owner.api";
 
+import LocationPicker from "../../../shared/components/LocationPicker/LocationPicker";
+
 import {
   showSuccess,
   showError,
@@ -69,6 +71,13 @@ const OwnerOnboardingPage = () => {
   const [selectedFiles, setSelectedFiles] =
     useState([]);
 
+  const [location, setLocation] = useState({
+    address: "",
+    city: "",
+    latitude: "",
+    longitude: "",
+    placeId: "",
+  });
   const {
     register,
 
@@ -109,7 +118,8 @@ const OwnerOnboardingPage = () => {
   const onSubmit = async (data) => {
 
     try {
-
+      console.log("clicked on submit");
+      
       if (selectedFiles.length === 0) {
 
         showError(
@@ -120,6 +130,21 @@ const OwnerOnboardingPage = () => {
 
       }
 
+      if (
+        !location.address ||
+
+        !location.city ||
+
+        !location.latitude ||
+
+        !location.longitude
+      ) {
+        showError(
+          "Please select your venue location."
+        );
+
+        return;
+      }
       const formData =
         new FormData();
 
@@ -135,12 +160,27 @@ const OwnerOnboardingPage = () => {
 
       formData.append(
         "city",
-        data.city
+        location.city
       );
 
       formData.append(
         "address",
-        data.address
+        location.address
+      );
+
+      formData.append(
+        "latitude",
+        location.latitude
+      );
+
+      formData.append(
+        "longitude",
+        location.longitude
+      );
+
+      formData.append(
+        "placeId",
+        location.placeId ?? ""
       );
 
       formData.append(
@@ -169,7 +209,7 @@ const OwnerOnboardingPage = () => {
         }
       );
       console.log("entered here");
-      
+
       const response =
         await onboardOwnerApi(
           formData
@@ -192,7 +232,7 @@ const OwnerOnboardingPage = () => {
 
       showError(
         error?.response?.data?.message ||
-          "Unable to complete onboarding."
+        "Unable to complete onboarding."
       );
 
     }
@@ -206,7 +246,12 @@ const OwnerOnboardingPage = () => {
         <BackButton />
 
         <form
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(
+            onSubmit,
+            (errors) => {
+                console.log(errors);
+            }
+        )}
           className="space-y-8 mt-6"
         >
 
@@ -267,7 +312,9 @@ const OwnerOnboardingPage = () => {
                   Venue Name
 
                 </label>
-
+                <p className="text-xs text-gray-500 mb-2">
+                  This is the name customers will see while searching.
+                </p>
                 <input
                   {...register("name")}
                   placeholder="Grand Convention Hall"
@@ -333,219 +380,195 @@ const OwnerOnboardingPage = () => {
                 )}
 
               </div>
+              <div className="md:col-span-2">
 
-              {/* City */}
+                <label className="block text-sm font-medium mb-2">
+                  Venue Location
+                </label>
+
+                <p className="text-sm text-gray-500 mb-3">
+                  Search for your venue or click on the map to choose the exact location.
+                </p>
+
+                <LocationPicker
+                  value={location}
+                  onChange={setLocation}
+                />
+
+                {location.address && (
+                  <div className="mt-4 rounded-xl border bg-gray-50 p-4">
+
+                    <p className="font-semibold">
+                      Selected Location
+                    </p>
+
+                    <p className="text-gray-600 mt-1">
+                      {location.address}
+                    </p>
+
+                    <p className="text-sm text-gray-500">
+                      {location.city}
+                    </p>
+
+                  </div>
+                )}
+
+              </div>
+            </div>
+
+          </div>
+          {/* Venue Details */}
+
+          <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-8">
+
+            <div className="mb-8">
+
+              <h2 className="text-2xl font-bold">
+                Venue Details
+              </h2>
+
+              <p className="text-gray-500 mt-2">
+                Help customers understand your venue.
+              </p>
+
+            </div>
+
+            <div className="space-y-6">
+
+              {/* Description */}
 
               <div>
 
                 <label className="block text-sm font-medium mb-2">
 
-                  City
-
-                </label>
-
-                <input
-                  {...register("city")}
-                  placeholder="Kochi"
-                  className="inputClass"
-                />
-
-                {errors.city && (
-
-                  <p className="text-sm text-red-500 mt-2">
-
-                    {errors.city.message}
-
-                  </p>
-
-                )}
-
-              </div>
-
-              {/* Address */}
-
-              <div className="md:col-span-2">
-
-                <label className="block text-sm font-medium mb-2">
-
-                  Full Address
+                  Description
 
                 </label>
 
                 <textarea
-                  rows={3}
-                  {...register("address")}
-                  placeholder="Enter the complete venue address..."
+                  rows={6}
+                  {...register("description")}
+                  placeholder="Tell customers about your venue, facilities, nearby landmarks, parking availability, ideal events..."
                   className="inputClass py-3"
                 />
 
-                {errors.address && (
+                <div className="flex justify-between mt-2">
 
-                  <p className="text-sm text-red-500 mt-2">
+                  {errors.description ? (
 
-                    {errors.address.message}
+                    <p className="text-sm text-red-500">
 
-                  </p>
+                      {errors.description.message}
 
-                )}
+                    </p>
+
+                  ) : (
+
+                    <p className="text-xs text-gray-400">
+
+                      A good description improves bookings.
+
+                    </p>
+
+                  )}
+
+                </div>
+
+              </div>
+
+              {/* Capacity & Price */}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div>
+
+                  <label className="block text-sm font-medium mb-2">
+
+                    Maximum Capacity
+
+                  </label>
+
+                  <input
+                    type="number"
+                    min="1"
+                    {...register("capacity")}
+                    placeholder="200"
+                    className="inputClass"
+                  />
+
+                  {errors.capacity && (
+
+                    <p className="text-sm text-red-500 mt-2">
+
+                      {errors.capacity.message}
+
+                    </p>
+
+                  )}
+
+                </div>
+
+                <div>
+
+                  <label className="block text-sm font-medium mb-2">
+
+                    Price Per Day (₹)
+
+                  </label>
+
+                  <input
+                    type="number"
+                    min="1"
+                    {...register("price")}
+                    placeholder="15000"
+                    className="inputClass"
+                  />
+
+                  {errors.price && (
+
+                    <p className="text-sm text-red-500 mt-2">
+
+                      {errors.price.message}
+
+                    </p>
+
+                  )}
+
+                </div>
 
               </div>
 
             </div>
 
           </div>
-                    {/* Venue Details */}
 
-                    <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-8">
+          {/* Venue Images */}
 
-<div className="mb-8">
+          <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-8">
 
-  <h2 className="text-2xl font-bold">
-    Venue Details
-  </h2>
+            <div className="mb-8">
 
-  <p className="text-gray-500 mt-2">
-    Help customers understand your venue.
-  </p>
+              <h2 className="text-2xl font-bold">
 
-</div>
+                Venue Photos
 
-<div className="space-y-6">
+              </h2>
 
-  {/* Description */}
+              <p className="text-gray-500 mt-2">
 
-  <div>
+                Upload high-quality photos of your venue.
+                The first image will be used as the cover photo.
 
-    <label className="block text-sm font-medium mb-2">
+              </p>
 
-      Description
+            </div>
 
-    </label>
+            <ImageUploader
+              files={selectedFiles}
+              setFiles={setSelectedFiles}
+            />
 
-    <textarea
-      rows={6}
-      {...register("description")}
-      placeholder="Tell customers about your venue, facilities, nearby landmarks, parking availability, ideal events..."
-      className="inputClass py-3"
-    />
-
-    <div className="flex justify-between mt-2">
-
-      {errors.description ? (
-
-        <p className="text-sm text-red-500">
-
-          {errors.description.message}
-
-        </p>
-
-      ) : (
-
-        <p className="text-xs text-gray-400">
-
-          A good description improves bookings.
-
-        </p>
-
-      )}
-
-    </div>
-
-  </div>
-
-  {/* Capacity & Price */}
-
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-    <div>
-
-      <label className="block text-sm font-medium mb-2">
-
-        Maximum Capacity
-
-      </label>
-
-      <input
-        type="number"
-        min="1"
-        {...register("capacity")}
-        placeholder="200"
-        className="inputClass"
-      />
-
-      {errors.capacity && (
-
-        <p className="text-sm text-red-500 mt-2">
-
-          {errors.capacity.message}
-
-        </p>
-
-      )}
-
-    </div>
-
-    <div>
-
-      <label className="block text-sm font-medium mb-2">
-
-        Price Per Day (₹)
-
-      </label>
-
-      <input
-        type="number"
-        min="1"
-        {...register("price")}
-        placeholder="15000"
-        className="inputClass"
-      />
-
-      {errors.price && (
-
-        <p className="text-sm text-red-500 mt-2">
-
-          {errors.price.message}
-
-        </p>
-
-      )}
-
-    </div>
-
-  </div>
-
-</div>
-
-</div>
-
-{/* Venue Images */}
-
-<div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-8">
-
-<div className="mb-8">
-
-  <h2 className="text-2xl font-bold">
-
-    Venue Photos
-
-  </h2>
-
-  <p className="text-gray-500 mt-2">
-
-    Upload high-quality photos of your venue.
-    The first image will be used as the cover photo.
-
-  </p>
-
-</div>
-
-<ImageUploader
-  files={selectedFiles}
-  setFiles={setSelectedFiles}
-/>
-
-</div>
+          </div>
 
           {/* Information */}
 
@@ -591,7 +614,13 @@ const OwnerOnboardingPage = () => {
 
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting ||
+
+                !location.address ||
+
+                !location.latitude ||
+
+                !location.longitude}
               className="btn-primary w-full md:w-auto px-10"
             >
               {isSubmitting

@@ -33,7 +33,6 @@ const VenueDetailsPage = () => {
       </div>
     );
   }
-  //   console.log(venue);
   if (!venue) {
     return (
       <div className="pt-[68px] min-h-screen flex flex-col items-center justify-center gap-3">

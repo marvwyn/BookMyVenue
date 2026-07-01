@@ -11,13 +11,16 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
+    "@vis.gl/react-google-maps": "^1.8.3",
     "axios": "^1.16.1",
+    "leaflet": "^1.9.4",
     "lucide-react": "^1.21.0",
     "react": "^19.2.6",
     "react-day-picker": "^10.0.1",
     "react-dom": "^19.2.6",
     "react-hook-form": "^7.76.1",
     "react-hot-toast": "^2.6.0",
+    "react-leaflet": "^5.0.0",
     "react-router-dom": "^7.16.0",
     "zod": "^4.4.3"
   },

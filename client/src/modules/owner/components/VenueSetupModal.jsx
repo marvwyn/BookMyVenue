@@ -5,8 +5,18 @@ import { updateVenueApi } from "../../venues/api/venue.api";
 
 import { showError, showSuccess } from "../../../shared/utils/toast";
 
+import LocationPicker from "../../../shared/components/LocationPicker/LocationPicker";
+
 const VenueSetupModal = ({ venue, onClose }) => {
     const [selectedFiles, setSelectedFiles] = useState([]);
+
+    const [location, setLocation] = useState({
+        address: venue.address,
+        city: venue.city,
+        latitude: venue.latitude,
+        longitude: venue.longitude,
+        placeId: venue.placeId,
+    });
 
     const {
         register,
@@ -25,6 +35,7 @@ const VenueSetupModal = ({ venue, onClose }) => {
     });
 
     useEffect(() => {
+
         reset({
             address: venue.address || "",
             description: venue.description || "",
@@ -33,7 +44,16 @@ const VenueSetupModal = ({ venue, onClose }) => {
             images: venue.images || [],
         });
 
+        setLocation({
+            address: venue.address || "",
+            city: venue.city || "",
+            latitude: venue.latitude || "",
+            longitude: venue.longitude || "",
+            placeId: venue.placeId || "",
+        });
+
         setSelectedFiles([]);
+
     }, [venue, reset]);
 
     const images = watch("images");
@@ -65,14 +85,44 @@ const VenueSetupModal = ({ venue, onClose }) => {
 
     const onSubmit = async (data) => {
         try {
+            if (
+                !location.address ||
+
+                !location.city ||
+
+                !location.latitude ||
+
+                !location.longitude
+            ) {
+                showError(
+                    "Please select the venue location."
+                );
+
+                return;
+            }
             const formData = new FormData();
 
-            formData.append("address", data.address || "");
+            formData.append("address", location.address);
+            formData.append(
+                "city",
+                location.city
+            );
+            formData.append(
+                "latitude",
+                location.latitude
+            );
+            formData.append(
+                "longitude",
+                location.longitude
+            );
             formData.append(
                 "description",
                 data.description || ""
             );
-
+            formData.append(
+                "placeId",
+                location.placeId ?? ""
+            );
             if (data.capacity) {
                 formData.append(
                     "capacity",
@@ -91,15 +141,12 @@ const VenueSetupModal = ({ venue, onClose }) => {
                 formData.append("images", file);
             });
 
-            for (const [key, value] of formData.entries()) {
-                console.log(key, value);
-            }
             await updateVenueApi(
                 venue.id,
                 formData
             );
             showSuccess("Venue updated successfully")
-           
+
             onClose();
         } catch (error) {
             showError(error.message || "Failed to update venue")
@@ -169,7 +216,7 @@ const VenueSetupModal = ({ venue, onClose }) => {
                         </h3>
 
                         <p className="text-sm text-gray-500 mt-1">
-                            {venue.city}
+                            {location.city}
                         </p>
 
                         <p className="text-xs text-gray-400 mt-2">
@@ -192,10 +239,27 @@ const VenueSetupModal = ({ venue, onClose }) => {
                             Address
                         </label>
 
-                        <input
-                            {...register("address")}
-                            className="inputClass"
+                        <LocationPicker
+                            value={location}
+                            onChange={setLocation}
                         />
+                        {location.address && (
+                            <div className="mt-4 rounded-xl border bg-gray-50 p-4">
+
+                                <p className="font-semibold">
+                                    Selected Location
+                                </p>
+
+                                <p className="text-gray-600 mt-1">
+                                    {location.address}
+                                </p>
+
+                                <p className="text-sm text-gray-500">
+                                    {location.city}
+                                </p>
+
+                            </div>
+                        )}
                     </div>
 
                     {/* Description */}
@@ -499,7 +563,12 @@ const VenueSetupModal = ({ venue, onClose }) => {
 
                         <button
                             type="submit"
-                            disabled={isSubmitting}
+                            disabled={
+                                isSubmitting ||
+                                !location.address ||
+                                !location.latitude ||
+                                !location.longitude
+                            }
                             className="btn-primary"
                         >
                             {isSubmitting

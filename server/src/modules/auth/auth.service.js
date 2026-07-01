@@ -102,19 +102,23 @@ export const signupUser = async (userData) => {
             });
 
             await tx.venue.create({
-
                data: {
-
                   ownerId: createdUser.id,
-
+            
                   name: userData.venue.name,
-
+            
                   type: userData.venue.type,
-
-                  city: userData.venue.city
-
+            
+                  city: userData.venue.city,
+            
+                  address: userData.venue.address,
+            
+                  latitude: Number(userData.venue.latitude),
+            
+                  longitude: Number(userData.venue.longitude),
+            
+                  placeId: String(userData.venue.placeId ?? "")
                }
-
             });
 
          }
@@ -309,7 +313,6 @@ export const loginAdmin = async (
    const roles = user.roles.map(
       role => role.role
    );
-   // console.log("Admin Login Roles:", roles);
 
    if (!roles.includes('ADMIN')) {
 

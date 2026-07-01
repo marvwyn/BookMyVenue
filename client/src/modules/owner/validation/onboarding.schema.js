@@ -23,17 +23,6 @@ export const ownerOnboardingSchema = z.object({
       }),
     }
   ),
-
-  city: z
-    .string()
-    .trim()
-    .min(2, "City is required"),
-
-  address: z
-    .string()
-    .trim()
-    .min(5, "Address is required"),
-
   description: z
     .string()
     .trim()

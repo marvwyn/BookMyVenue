@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const createVenueSchema = z.object({
+
   name: z
     .string()
     .trim()
@@ -20,57 +21,83 @@ export const createVenueSchema = z.object({
   city: z
     .string()
     .trim()
-    .min(2, "City is required"),
+    .min(1, "City is required"),
 
   address: z
     .string()
     .trim()
-    .optional(),
+    .min(1, "Address is required"),
+
+  latitude: z.coerce
+    .number(),
+
+  longitude: z.coerce
+    .number(),
+
+  placeId: z
+    .string()
+    .optional()
+    .or(z.literal("")),
 
   description: z
     .string()
     .trim()
     .optional(),
 
-  capacity: z
+  capacity: z.coerce
     .number()
     .int()
     .positive()
     .optional(),
 
-  price: z
+  price: z.coerce
     .number()
     .positive()
     .optional(),
 
   images: z
-    .array(
-      z.string().url()
-    )
+    .array(z.string().url())
     .default([]),
+
 });
 
 export const updateVenueSchema = z.object({
+
+  city: z
+    .string()
+    .trim()
+    .min(1, "City is required"),
+
   address: z
     .string()
     .trim()
-    .optional(),
+    .min(1, "Address is required"),
+
+  latitude: z.coerce
+    .number(),
+
+  longitude: z.coerce
+    .number(),
+
+  placeId: z
+    .string()
+    .optional()
+    .or(z.literal("")),
 
   description: z
     .string()
     .trim()
     .optional(),
 
-  capacity: z
-    .coerce
+  capacity: z.coerce
     .number()
     .int()
     .positive()
     .optional(),
 
-  price: z
-    .coerce
+  price: z.coerce
     .number()
     .positive()
     .optional(),
+
 });

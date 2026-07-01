@@ -31,7 +31,7 @@ export const userSignupSchema = z
       }
    );
 
-export const ownerSignupSchema = z
+   export const ownerSignupSchema = z
    .object({
 
       ...baseSchema,
@@ -43,10 +43,6 @@ export const ownerSignupSchema = z
       venueType: z
          .string()
          .min(1, 'Venue type is required'),
-
-      city: z
-         .string()
-         .min(2, 'City is required')
 
    })
    .refine(

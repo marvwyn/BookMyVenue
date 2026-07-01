@@ -63,3 +63,33 @@ export const fetchVenueAvailabilityApi = async (id) => {
   );
   return response.data;
 };
+export const fetchNearbyVenuesApi =
+  async (
+    latitude,
+    longitude,
+    limit = 20
+  ) => {
+
+    const response =
+      await axiosInstance.get(
+
+        API_ROUTES.VENUES.NEARBY,
+
+        {
+
+          params: {
+
+            latitude,
+
+            longitude,
+
+            limit,
+
+          },
+
+        }
+
+      );
+
+    return response.data;
+};

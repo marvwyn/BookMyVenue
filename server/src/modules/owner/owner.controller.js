@@ -5,6 +5,7 @@ import { onboardOwnerService } from "./owner.service.js";
 import { STATUS_CODES } from "../../shared/constants/statusCodes.js";
 
 import ApiResponse from "../../shared/utils/apiResponse.js";
+import ApiError from "../../shared/utils/apiError.js";
 
 export const onboardOwner = async (
   req,
@@ -18,7 +19,8 @@ export const onboardOwner = async (
 
     if (req.files?.length) {
 
-      imageUrls = await uploadImages(req.files);
+      imageUrls =
+        await uploadImages(req.files);
 
     }
 
@@ -29,6 +31,23 @@ export const onboardOwner = async (
       images: imageUrls,
 
     };
+    
+    if (
+      !ownerData.address ||
+      !ownerData.city ||
+      !ownerData.latitude ||
+      !ownerData.longitude
+    ) {
+
+      throw new ApiError(
+
+        STATUS_CODES.BAD_REQUEST,
+
+        "Please select a valid venue location."
+
+      );
+
+    }
 
     const result =
       await onboardOwnerService(

@@ -5,7 +5,7 @@ import { API_ROUTES } from "../../../shared/constants/apiRoutes";
 export const onboardOwnerApi = async (
   formData
 ) => {
-
+  
   const response =
     await axiosInstance.post(
 
