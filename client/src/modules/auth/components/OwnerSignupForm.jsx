@@ -1,10 +1,13 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 import { signupApi } from "../services/auth.service";
 import { ownerSignupSchema } from "../validations/signup.validation";
 import { useAuth } from "../../../shared/context/CustomerAuthContext";
+
+import LocationPicker from "../../../shared/components/LocationPicker/LocationPicker";
 
 import { ROUTES } from '../../../shared/constants/routes';
 
@@ -27,6 +30,13 @@ const inputClass = `
 const OwnerSignupForm = ({ onBack }) => {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const [location, setLocation] = useState({
+    address: "",
+    city: "",
+    latitude: "",
+    longitude: "",
+    placeId: "",
+  });
   const {
     register,
     handleSubmit,
@@ -34,9 +44,20 @@ const OwnerSignupForm = ({ onBack }) => {
   } = useForm({
     resolver: zodResolver(ownerSignupSchema),
   });
+  
+  console.log(errors);
 
   const onSubmit = async (data) => {
     try {
+      if (
+        !location.address ||
+        !location.city ||
+        !location.latitude ||
+        !location.longitude
+      ) {
+        showError("Please select your venue location.");
+        return;
+      }
       const payload = {
         accountType: "OWNER",
 
@@ -50,7 +71,15 @@ const OwnerSignupForm = ({ onBack }) => {
 
           type: data.venueType,
 
-          city: data.city,
+          city: location.city,
+
+          address: location.address,
+
+          latitude: location.latitude,
+
+          longitude: location.longitude,
+
+          placeId: location.placeId ?? "",
         },
       };
 
@@ -154,15 +183,51 @@ const OwnerSignupForm = ({ onBack }) => {
           <option value="OTHER">Other</option>
         </select>
 
-        <input
-          placeholder="City"
-          {...register("city")}
-          className={inputClass}
-        />
+        <div className="space-y-3">
+
+          <label className="font-medium">
+            Venue Location
+          </label>
+
+          <p className="text-sm text-gray-500">
+            Search for your venue or click on the map to choose the exact location.
+          </p>
+
+          <LocationPicker
+            value={location}
+            onChange={setLocation}
+          />
+
+          {location.address && (
+
+            <div className="rounded-xl bg-gray-50 border p-4">
+
+              <p className="font-semibold">
+                Selected Location
+              </p>
+
+              <p className="text-gray-600 mt-1">
+                {location.address}
+              </p>
+
+              <p className="text-sm text-gray-500">
+                {location.city}
+              </p>
+
+            </div>
+
+          )}
+
+        </div>
 
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={
+            isSubmitting ||
+            !location.address ||
+            !location.latitude ||
+            !location.longitude
+          }
           className="
                w-full
                h-12

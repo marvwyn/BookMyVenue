@@ -1,6 +1,8 @@
 
 import { Router } from "express";
-import { deleteVenue, getVenueById, getVenues, createVenue, updateVenue, getVenueAvailability } from "./venues.controller.js";
+import { 
+    deleteVenue, getVenueById, getVenues, createVenue, updateVenue, getVenueAvailability, getNearbyVenues 
+} from "./venues.controller.js";
 import { authenticate }  from './../../shared/middlewares/auth.middleware.js';
 import { authorize }  from './../../shared/middlewares/authorize.middleware.js';
 import { validate }  from '../../shared/middlewares/validate.middleware.js';
@@ -51,6 +53,10 @@ venueRoutes.get(
     getVenueAvailability
   );
 
+venueRoutes.get(
+    "/nearby", 
+    getNearbyVenues
+);
 
 export default venueRoutes;
 

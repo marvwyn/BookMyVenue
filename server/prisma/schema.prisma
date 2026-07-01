@@ -7,6 +7,96 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id           String     @id @default(uuid())
+  name         String
+  email        String     @unique
+  passwordHash String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  phone        String     @unique
+  bookings     Booking[]
+  roles        UserRole[]
+  venues       Venue[]
+}
+
+model UserRole {
+  id        String   @id @default(uuid())
+  userId    String
+  role      Role
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, role])
+}
+
+model Venue {
+  id          String      @id @default(uuid())
+
+  ownerId     String
+
+  name        String
+
+  type        VenueType
+
+  // Location
+
+  city        String
+
+  address     String
+
+  placeId     String?
+
+  latitude    Float
+
+  longitude   Float
+
+  // Venue Details
+
+  description String?
+
+  capacity    Int?
+
+  price       Float?
+
+  amenities   String[]
+
+  images      String[]
+
+  status      VenueStatus @default(PENDING)
+
+  createdAt   DateTime    @default(now())
+
+  updatedAt   DateTime    @updatedAt
+  owner       User        @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  bookings Booking[]
+
+  @@index([city])
+
+  @@index([status])
+}
+
+model Booking {
+  id         String        @id @default(uuid())
+  venueId    String
+  userId     String
+  startDate  DateTime
+  endDate    DateTime
+  guestCount Int
+  eventType  String?
+  notes      String?
+  totalPrice Decimal?      @db.Decimal(10, 2)
+  status     BookingStatus @default(CONFIRMED)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  user       User          @relation(fields: [userId], references: [id])
+  venue      Venue         @relation(fields: [venueId], references: [id])
+
+  @@index([venueId])
+  @@index([userId])
+  @@index([status])
+}
+
 enum Role {
   USER
   OWNER
@@ -28,93 +118,6 @@ enum VenueType {
   STUDIO
   OUTDOOR_SPACE
   OTHER
-}
-
-model User {
-  id           String   @id @default(uuid())
-
-  name         String
-  email        String   @unique
-  phone        String   @unique
-  passwordHash String
-
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  roles        UserRole[]
-  venues       Venue[]
-  bookings     Booking[]
-}
-
-model UserRole {
-  id        String   @id @default(uuid())
-
-  userId    String
-  role      Role
-
-  createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, role])
-}
-
-model Venue {
-  id          String       @id @default(uuid())
-
-  ownerId     String
-
-  name         String
-  type         VenueType
-
-  city         String
-  address      String?
-
-  description  String?
-
-  capacity     Int?
-  price        Float?
-
-  amenities    String[]
-  images       String[]
-
-  status       VenueStatus @default(PENDING)
-
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-
-  owner User @relation( fields: [ownerId], references: [id], onDelete: Cascade )
-
-  bookings     Booking[]
-}
-
-model Booking {
-  id          String   @id @default(uuid())
-
-  venueId     String
-  venue       Venue    @relation(fields: [venueId], references: [id])
-
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-
-  startDate   DateTime
-  endDate     DateTime
-
-  guestCount  Int
-
-  eventType   String?
-  notes       String?
-
-  totalPrice  Decimal? @db.Decimal(10,2)
-
-  status      BookingStatus @default(CONFIRMED)
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@index([venueId])
-  @@index([userId])
-  @@index([status])
 }
 
 enum BookingStatus {

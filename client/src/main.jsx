@@ -1,26 +1,41 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { AuthProvider } from './shared/context/CustomerAuthContext';
-import { AdminAuthProvider } from './shared/context/AdminAuthContext';
+import React from "react";
+import ReactDOM from "react-dom/client";
 
-import App from './app/app.jsx';
-import './index.css';
-import './global.css';
+import { APIProvider } from "@vis.gl/react-google-maps";
+
+import App from "./app/app.jsx";
+
+import { AuthProvider } from "./shared/context/CustomerAuthContext";
+import { AdminAuthProvider } from "./shared/context/AdminAuthContext";
+
+import "./index.css";
+import "./global.css";
 
 ReactDOM.createRoot(
-   document.getElementById('root')
+  document.getElementById("root")
 ).render(
-   <React.StrictMode>
 
-    <AuthProvider>
+  <React.StrictMode>
 
-      <AdminAuthProvider>
+    <APIProvider
+      apiKey={
+        import.meta.env
+          .VITE_GOOGLE_MAPS_API_KEY
+      }
+    >
 
-        <App />
+      <AuthProvider>
 
-      </AdminAuthProvider>
+        <AdminAuthProvider>
 
-    </AuthProvider>
+          <App />
+
+        </AdminAuthProvider>
+
+      </AuthProvider>
+
+    </APIProvider>
 
   </React.StrictMode>
+
 );

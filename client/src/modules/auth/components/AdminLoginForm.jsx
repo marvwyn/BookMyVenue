@@ -41,7 +41,6 @@ const AdminLoginForm = () => {
         password: data.password,
       });
 
-      console.log(response);
 
       loginAdmin(response.data.user, response.data.accessToken);
 

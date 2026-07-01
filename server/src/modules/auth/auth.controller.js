@@ -5,6 +5,7 @@ import ApiResponse from "../../shared/utils/apiResponse.js";
 
 export const signupController = async (req, res, next) => {
   try {
+    
     const user = await signupUser(req.body);
 
     return res

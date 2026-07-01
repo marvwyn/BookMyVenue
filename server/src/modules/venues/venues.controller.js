@@ -12,25 +12,71 @@ import {
   createVenueService,
   updateVenueService,
   getMyVenuesService,
-  getVenueAvailabilityService
+  getVenueAvailabilityService,
+  getNearbyVenuesService
 } from "./venues.service.js";
 import { uploadImages } from "../../shared/services/storage/storage.service.js";
 
-export const createVenue = async (req, res, next) => {
+export const createVenue = async (
+  req,
+  res,
+  next
+) => {
+
   try {
-    const venue = await createVenueService(req.body, req.user.userId);
+
+    let imageUrls = [];
+
+    if (req.files?.length) {
+
+      imageUrls =
+        await uploadImages(req.files);
+
+    }
+
+    const venueData = {
+
+      ...req.body,
+
+      ...(imageUrls.length > 0 && {
+
+        images: imageUrls,
+
+      }),
+
+    };
+
+    const venue =
+      await createVenueService(
+
+        venueData,
+
+        req.user.userId
+
+      );
+
     return res
       .status(STATUS_CODES.CREATED)
       .json(
+
         new ApiResponse(
+
           STATUS_CODES.CREATED,
+
           SUCCESS_MESSAGES.VENUE_CREATED,
-          venue,
-        ),
+
+          venue
+
+        )
+
       );
+
   } catch (error) {
+
     next(error);
+
   }
+
 };
 
 export const getVenues = async (req, res, next) => {
@@ -174,6 +220,69 @@ export const getVenueAvailability = async (
 
   } catch (error) {
     next(error);
+  }
+
+};
+
+export const getNearbyVenues = async (
+  req,
+  res,
+  next
+) => {
+
+  try {
+
+    const {
+      latitude,
+      longitude,
+      limit,
+    } = req.query;
+
+    if (!latitude || !longitude) {
+
+      throw new ApiError(
+
+        STATUS_CODES.BAD_REQUEST,
+
+        "Latitude and longitude are required"
+
+      );
+
+    }
+
+    const venues =
+      await getNearbyVenuesService(
+
+        Number(latitude),
+
+        Number(longitude),
+
+        limit
+          ? Number(limit)
+          : 20
+
+      );
+
+    return res
+      .status(STATUS_CODES.OK)
+      .json(
+
+        new ApiResponse(
+
+          STATUS_CODES.OK,
+
+          "Nearby venues fetched successfully",
+
+          venues
+
+        )
+
+      );
+
+  } catch (error) {
+
+    next(error);
+
   }
 
 };

@@ -47,16 +47,6 @@ const LoginForm = () => {
 
          });
 
-         console.log(response);
-
-         /*
-         Later
-
-         localStorage.setItem(
-            'accessToken',
-            response.data.accessToken
-         );
-         */
 
          login(
             response.data.user,
